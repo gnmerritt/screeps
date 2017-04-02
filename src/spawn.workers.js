@@ -32,7 +32,7 @@ function getBody(role, energy) {
   var base = [WORK, CARRY, MOVE];
   var cost = getCost(base);
 
-  while (cost < energy) {
+  while (cost < energy && false) {
     var remaining = energy - cost;
     var added = false;
 
