@@ -1,11 +1,11 @@
 var c = require('constants');
 
-function countRoles(role) {
-  return _.filter(Game.creeps, (creep) => creep.memory.role == role).length
+function countRoles(room, role) {
+  return _.filter(room.find(FIND_MY_CREEPS), (creep) => creep.memory.role == role).length;
 }
 
-function getRole() {
-  if (countRoles('harvester') < 2) {
+function getRole(room) {
+  if (countRoles(room, 'harvester') < 2) {
     return 'harvester';
   }
   // TODO: check if we are under attack
@@ -54,7 +54,7 @@ function getBody(role, energy) {
 }
 
 function spawnCreep(spawn, energy) {
-  var role = getRole();
+  var role = getRole(spawn.room);
   var body = getBody(role, energy);
   console.log('Spawning a ' + role + ' using ' + energy + ' energy ' + body);
   spawn.createCreep(body, undefined, {role: role});
