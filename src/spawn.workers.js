@@ -64,8 +64,9 @@ function run() {
   for (var name in Game.spawns) {
     var spawn = Game.spawns[name];
     var room = spawn.room;
+    var noCreeps = _.filter(room.creeps, () => true).length === 0;
     // TODO: handle energy in multiple spawns?
-    if (room.energyAvailable === room.energyCapacityAvailable) {
+    if (room.energyAvailable === room.energyCapacityAvailable || noCreeps) {
       spawnCreep(spawn, room.energyAvailable);
     }
   }
