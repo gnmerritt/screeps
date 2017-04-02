@@ -9,7 +9,6 @@ function getRole() {
     return 'harvester';
   }
   // TODO: check if we are under attack
-  // TODO: make sure there are construction sites
   return 'builder';
 }
 
@@ -32,7 +31,7 @@ function getBody(role, energy) {
   var base = [WORK, CARRY, MOVE];
   var cost = getCost(base);
 
-  while (cost < energy && false) {
+  while (cost < energy) {
     var remaining = energy - cost;
     var added = false;
 
@@ -40,7 +39,7 @@ function getBody(role, energy) {
     for (var i in adds) {
       var toAdd = adds[i];
       if (getCost(toAdd) < remaining) {
-        base.concat(toAdd);
+        base = base.concat(toAdd);
         cost = getCost(base);
         added = true;
         break;
