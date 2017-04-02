@@ -15,10 +15,10 @@ var roleBuilder = {
 
         if (creep.memory.building) {
           // build if there are construction sites, otherwise upgrade controller
-          var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
-          if (targets.length) {
-            if (creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+          var target = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+          if (target) {
+            if (creep.build(target) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
             }
           } else {
             if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
@@ -27,9 +27,9 @@ var roleBuilder = {
           }
         }
         else {
-            var sources = creep.room.find(FIND_SOURCES);
-            if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+            var source = creep.pos.findClosestByPath(FIND_SOURCES);
+            if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
             }
         }
     }
