@@ -27,9 +27,10 @@ var roleBuilder = {
           }
         }
         else {
-            var source = creep.pos.findClosestByPath(FIND_SOURCES);
-            if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
+            var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+            var success = creep.harvest(source);
+            if (success === ERR_NOT_IN_RANGE || success === ERR_NOT_ENOUGH_RESOURCES) {
+              creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
             }
         }
     }
