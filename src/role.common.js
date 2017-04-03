@@ -5,7 +5,7 @@ var common = {
       creep.say('recharging');
       creep.memory.healing = true;
     }
-    else if (creep.memory.healing && creep.ticksToLive > 600) {
+    else if (creep.memory.healing && creep.ticksToLive > 900) {
       creep.say('healed');
       creep.memory.healing = false;
     }
