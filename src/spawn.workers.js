@@ -5,7 +5,8 @@ function countRoles(room, role) {
 }
 
 function getRole(room) {
-  if (countRoles(room, 'harvester') < room.controller.level) {
+  var numHarvesters = Math.min(room.controller.level, 4);
+  if (countRoles(room, 'harvester') < numHarvesters) {
     return 'harvester';
   }
   // TODO: check if we are under attack
