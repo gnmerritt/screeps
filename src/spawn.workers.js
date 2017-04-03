@@ -60,13 +60,17 @@ function spawnCreep(spawn, energy) {
   spawn.createCreep(body, undefined, {role: role});
 }
 
+var MAX_TO_SPEND = 800;
+
 function run() {
   for (var name in Game.spawns) {
     var spawn = Game.spawns[name];
     var room = spawn.room;
-    var noCreeps = room.find(FIND_MY_CREEPS).length === 0;
+    var noCreeps = room.find(FIND_MY_CREEPS).length === 0 && room.energyAvailable === 300;
+    var maxEnergy = room.energyAvailable === room.energyCapacityAvailable;
+    var maxToSpend = room.energyAvailable >= MAX_TO_SPEND;
     // TODO: handle energy in multiple spawns?
-    if (room.energyAvailable === room.energyCapacityAvailable || noCreeps) {
+    if (maxEnergy || maxToSpend || noCreeps) {
       spawnCreep(spawn, room.energyAvailable);
     }
   }
