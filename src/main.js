@@ -15,7 +15,7 @@ module.exports.loop = function () {
   for (var name in Game.creeps) {
     var creep = Game.creeps[name];
     if (commonRole.checkLife(creep)) {
-      return;
+      continue;
     }
 
     if (creep.memory.role == 'harvester') {
