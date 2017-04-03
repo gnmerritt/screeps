@@ -18,7 +18,7 @@ var roleHarvester = {
         creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
       }
     } else {
-      var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+      var target = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
         filter: (structure) => {
           var type = structure.structureType;
           return (type == STRUCTURE_EXTENSION || type == STRUCTURE_SPAWN || type == STRUCTURE_TOWER)

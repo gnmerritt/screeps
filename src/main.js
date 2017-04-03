@@ -1,3 +1,4 @@
+var commonRole = require('role.common');
 var roleHarvester = require('role.harvester');
 var roleBuilder = require('role.builder');
 var towers = require('role.tower');
@@ -13,6 +14,10 @@ module.exports.loop = function () {
 
   for (var name in Game.creeps) {
     var creep = Game.creeps[name];
+    if (commonRole.checkLife(creep)) {
+      return;
+    }
+
     if (creep.memory.role == 'harvester') {
       roleHarvester.run(creep);
     }
