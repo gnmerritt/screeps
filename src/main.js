@@ -3,8 +3,11 @@ var roleBuilder = require('role.builder');
 var towers = require('role.tower');
 
 var spawnWorkers = require('spawn.workers');
+var memory = require('memory');
 
 module.exports.loop = function () {
+  memory.cleanup();
+
   spawnWorkers.run();
   towers.run();
 
