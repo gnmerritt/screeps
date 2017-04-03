@@ -18,13 +18,20 @@ var roleHarvester = {
         creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
       }
     } else {
+      // prioritize an empty tower over harvesting to make new creeps
       var target = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-        filter: (structure) => {
-          var type = structure.structureType;
-          return (type == STRUCTURE_EXTENSION || type == STRUCTURE_SPAWN || type == STRUCTURE_TOWER)
-             && structure.energy < structure.energyCapacity;
-        }
+        filter: (structure) => structure.type == STRUCTURE_TOWER && structure.energy < 200
       });
+      if (!target) {
+        target = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
+          filter: (structure) => {
+            var type = structure.structureType;
+            return (type == STRUCTURE_EXTENSION || type == STRUCTURE_SPAWN || type == STRUCTURE_TOWER)
+               && structure.energy < structure.energyCapacity;
+          }
+        });
+      }
+
       if (target) {
         if (creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
