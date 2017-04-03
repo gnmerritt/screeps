@@ -1,11 +1,12 @@
 var common = {
   // @return whether we're heading in for a recharge or not
   checkLife: function(creep) {
-    if (creep.ticksToLive < 200) {
+    if (creep.ticksToLive < 200 && !creep.memory.healing) {
       creep.say('recharging');
       creep.memory.healing = true;
     }
     else if (creep.memory.healing && creep.ticksToLive > 600) {
+      creep.say('healed');
       creep.memory.healing = false;
     }
 
