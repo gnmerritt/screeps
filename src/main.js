@@ -7,7 +7,9 @@ var spawnWorkers = require('spawn.workers');
 var memory = require('memory');
 
 module.exports.loop = function () {
-  memory.cleanup();
+  if (Game.time % 100 === 0) {
+    memory.cleanup();
+  }
 
   spawnWorkers.run();
   towers.run();
