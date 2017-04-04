@@ -20,7 +20,7 @@ var roleHarvester = {
     } else {
       // prioritize an empty tower over harvesting to make new creeps
       var target = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-        filter: (structure) => structure.type == STRUCTURE_TOWER && structure.energy < 200
+        filter: (structure) => structure.type == STRUCTURE_TOWER && structure.energyAvailable < 200
       });
       if (!target) {
         target = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
