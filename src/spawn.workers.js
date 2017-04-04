@@ -67,7 +67,7 @@ function run() {
   for (var name in Game.spawns) {
     var spawn = Game.spawns[name];
     var room = spawn.room;
-    var noCreeps = room.find(FIND_MY_CREEPS).length === 0 && room.energyAvailable === 300;
+    var noCreeps = room.find(FIND_MY_CREEPS).length === 0 && room.energyAvailable >= 300;
     var maxEnergy = room.energyAvailable === room.energyCapacityAvailable;
     var maxToSpend = room.energyAvailable >= MAX_TO_SPEND;
     // TODO: handle energy in multiple spawns?
