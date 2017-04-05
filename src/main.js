@@ -1,7 +1,7 @@
 var commonRole = require('role.common');
 var roleHarvester = require('role.harvester');
 var roleBuilder = require('role.builder');
-var roleClaimer = require('role.claimer');
+var claimer = require('role.claimer');
 var towers = require('role.tower');
 
 var spawnWorkers = require('spawn.workers');
@@ -31,7 +31,7 @@ module.exports.loop = function () {
         roleBuilder.run(creep);
         break;
       case 'claimer':
-        roleClaimer.run(creep);
+        claimer.run(creep);
         break;
     }
   }

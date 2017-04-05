@@ -1,4 +1,5 @@
 var c = require('constants');
+var claimer = require('role.claimer');
 
 function countRoles(room, role) {
   return _.filter(room.find(FIND_MY_CREEPS), (creep) => creep.memory.role == role).length;
@@ -71,7 +72,12 @@ function run() {
     var maxEnergy = room.energyAvailable === room.energyCapacityAvailable;
     var maxToSpend = room.energyAvailable >= MAX_TO_SPEND;
     // TODO: handle energy in multiple spawns?
-    if (maxEnergy || maxToSpend || noCreeps) {
+
+    var spawnExpander = !noCreeps && countRoles(room, 'claimer') === 0 && claimer.shouldExpand(room);
+    if (spawnExpander) {
+      claimer.spawnExpander(spawn);
+    }
+    else if (maxEnergy || maxToSpend || noCreeps) {
       spawnCreep(spawn, room.energyAvailable);
     }
   }
