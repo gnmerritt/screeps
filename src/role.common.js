@@ -1,7 +1,16 @@
+var spawn = require('spawn.workers');
+
 var common = {
   // @return whether we're heading in for a recharge or not
   checkLife: function(creep) {
-    if (creep.ticksToLive < 200 && !creep.memory.healing) {
+    if (!creep.memory.cost) {
+      var body = _.map(creep.body, b => b.type);
+      creep.memory.cost = spawn.getCost(body);
+    }
+    // only heal creeps that are higher than the current RCL
+    var shouldHeal = creep.ticksToLive < 200
+      && creep.memory.cost > creep.room.energyCapacityAvailable;
+    if (shouldHeal && !creep.memory.healing) {
       creep.say('recharging');
       creep.memory.healing = true;
     }

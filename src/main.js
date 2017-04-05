@@ -17,11 +17,9 @@ module.exports.loop = function () {
 
   for (var name in Game.creeps) {
     var creep = Game.creeps[name];
-    /* experiment: turning off healing since it maybe stinks
     if (commonRole.checkLife(creep)) {
       continue;
     }
-    */
 
     switch (creep.memory.role) {
       case 'harvester':
