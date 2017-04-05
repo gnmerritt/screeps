@@ -61,7 +61,7 @@ function spawnCreep(spawn, energy) {
   spawn.createCreep(body, undefined, {role: role});
 }
 
-var MAX_TO_SPEND = 800;
+var MAX_TO_SPEND = 1200;
 
 function run() {
   for (var name in Game.spawns) {
