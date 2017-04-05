@@ -3,7 +3,12 @@ function runTower(room) {
   for (var i in towers) {
     var tower = towers[i];
     var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-      filter: (structure) => structure.hits < structure.hitsMax
+      filter: (structure) => {
+        if (structure.structureType === STRUCTURE_WALL) {
+          return structure.hits < 10000;
+        }
+        return structure.hits < structure.hitsMax
+      }
     });
     if (closestDamagedStructure) {
       tower.repair(closestDamagedStructure);
