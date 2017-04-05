@@ -1,6 +1,7 @@
 var commonRole = require('role.common');
 var roleHarvester = require('role.harvester');
 var roleBuilder = require('role.builder');
+var roleClaimer = require('role.claimer');
 var towers = require('role.tower');
 
 var spawnWorkers = require('spawn.workers');
@@ -22,11 +23,16 @@ module.exports.loop = function () {
     }
     */
 
-    if (creep.memory.role == 'harvester') {
-      roleHarvester.run(creep);
-    }
-    if (creep.memory.role == 'builder') {
-      roleBuilder.run(creep);
+    switch (creep.memory.role) {
+      case 'harvester':
+        roleHarvester.run(creep);
+        break;
+      case 'builder':
+        roleBuilder.run(creep);
+        break;
+      case 'claimer':
+        roleClaimer.run(creep);
+        break;
     }
   }
 }
