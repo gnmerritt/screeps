@@ -6,8 +6,7 @@ function countRoles(room, role) {
 }
 
 function getRole(room) {
-  var numHarvesters = Math.min(room.controller.level, 4);
-  if (countRoles(room, 'harvester') < numHarvesters) {
+  if (countRoles(room, 'harvester') < 3) {
     return 'harvester';
   }
   // TODO: check if we are under attack
@@ -68,7 +67,11 @@ function run() {
   for (var name in Game.spawns) {
     var spawn = Game.spawns[name];
     var room = spawn.room;
-    var noCreeps = room.find(FIND_MY_CREEPS).length === 0 && room.energyAvailable >= 300;
+
+    var numCreeps = room.find(FIND_MY_CREEPS).length;
+    var noCreeps = numCreeps === 0 && room.energyAvailable >= 300;
+    var tooManyCreeps = numCreeps >= 10; // EXPERIMENT
+    // before: harvested = 14.2K, on creeps = 5750
     var maxEnergy = room.energyAvailable === room.energyCapacityAvailable;
     var maxToSpend = room.energyAvailable >= MAX_TO_SPEND;
     // TODO: handle energy in multiple spawns?
@@ -77,7 +80,7 @@ function run() {
     if (spawnExpander) {
       claimer.spawnExpander(spawn);
     }
-    else if (maxEnergy || maxToSpend || noCreeps) {
+    else if (!tooManyCreeps && (maxEnergy || maxToSpend || noCreeps)) {
       spawnCreep(spawn, room.energyAvailable);
     }
   }
