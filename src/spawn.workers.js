@@ -73,7 +73,8 @@ function run() {
     var room = spawn.room;
 
     var numCreeps = room.find(FIND_MY_CREEPS).length;
-    var noCreeps = numCreeps === 0 && room.energyAvailable >= 300;
+    var numHarvesters = countRoles(room, 'harvester');
+    var noCreeps = (numCreeps === 0 || numHarvesters === 0) && room.energyAvailable >= 300;
     var tooManyCreeps = numCreeps >= optimizeWorkers.getMaxCreeps(room.name);
     // before: harvested = 14.2K, on creeps = 5750
     var maxEnergy = room.energyAvailable === room.energyCapacityAvailable;
