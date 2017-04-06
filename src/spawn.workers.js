@@ -81,7 +81,7 @@ function run() {
       claimer.spawnExpander(spawn);
     }
     else if (!tooManyCreeps && (maxEnergy || maxToSpend || noCreeps)) {
-      spawnCreep(spawn, room.energyAvailable);
+      spawnCreep(spawn, Math.min(MAX_TO_SPEND, room.energyAvailable));
     }
   }
 }
