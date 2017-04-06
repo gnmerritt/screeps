@@ -2,6 +2,11 @@ function runTower(room) {
   var towers = room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
   for (var i in towers) {
     var tower = towers[i];
+    var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+    if (closestHostile) {
+      tower.attack(closestHostile);
+    }
+
     var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
       filter: (structure) => {
         var type = structure.structureType;
@@ -11,13 +16,8 @@ function runTower(room) {
         return structure.hits < structure.hitsMax
       }
     });
-    if (closestDamagedStructure) {
+    if (!closestHostile && closestDamagedStructure) {
       tower.repair(closestDamagedStructure);
-    }
-
-    var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-    if (closestHostile) {
-      tower.attack(closestHostile);
     }
   }
 }
