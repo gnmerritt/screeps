@@ -4,8 +4,9 @@ function runTower(room) {
     var tower = towers[i];
     var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
       filter: (structure) => {
-        if (structure.structureType === STRUCTURE_WALL) {
-          return structure.hits < 10000;
+        var type = structure.structureType;
+        if (type === STRUCTURE_WALL || type === STRUCTURE_RAMPART) {
+          return structure.hits < 15000;
         }
         return structure.hits < structure.hitsMax
       }
