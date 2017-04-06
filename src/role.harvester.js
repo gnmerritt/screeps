@@ -7,8 +7,15 @@ var roleHarvester = {
       creep.say('depositing');
     }
     if (!creep.memory.harvesting && creep.carry.energy === 0) {
+      creep.memory.upgrading = false;
       creep.memory.harvesting = true;
       creep.say('🔄 harvest');
+    }
+    if (creep.memory.upgrading) {
+      if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+        creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#ffffff'}});
+      }
+      return;
     }
 
     if (creep.memory.harvesting) {
@@ -41,9 +48,8 @@ var roleHarvester = {
           creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
         }
       } else {
-        if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#ffffff'}});
-        }
+        creep.say('upgrading');
+        creep.memory.upgrading = true;
       }
     }
   }

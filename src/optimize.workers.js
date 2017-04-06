@@ -20,6 +20,7 @@ function checkEnergy() {
   }
   for (var name in Game.rooms) {
     var room = Game.rooms[name];
+    if (room.find(FIND_MY_SPAWNS).length === 0) continue;
     var sources = room.find(FIND_SOURCES);
     var wastedEnergy = 0;
     var wastedTicks = 999;
