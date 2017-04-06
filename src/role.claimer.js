@@ -47,14 +47,14 @@ var roleClaimer = {
     var myControllers = 0;
     for (var name in Game.rooms) {
       var room = Game.rooms[name];
-      if (room.controller.my) {
+      if (room.controller && room.controller.my) {
         myControllers += 1;
       }
     }
     return myControllers < Game.gcl.level;
   },
 
-  spawnExpander: function() {
+  spawnExpander: function(spawn) {
     console.log('Spawning an expander creep');
     spawn.createCreep([WORK,CARRY,CLAIM,MOVE,MOVE,MOVE], undefined, {role: 'claimer'});
   }
