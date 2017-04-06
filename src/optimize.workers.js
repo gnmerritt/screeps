@@ -39,7 +39,6 @@ function checkEnergy() {
         wastedTicks = Math.min(wastedTicks, toRegen);
       }
     }
-    room.log('Optimizer ran: wasted ticks = ' + wastedTicks + ' and energy = ' + wastedEnergy);
 
     // make adjustments if necessary
     var numCreeps = room.find(FIND_MY_CREEPS).length;
