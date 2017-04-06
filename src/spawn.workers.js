@@ -70,7 +70,7 @@ function run() {
 
     var numCreeps = room.find(FIND_MY_CREEPS).length;
     var noCreeps = numCreeps === 0 && room.energyAvailable >= 300;
-    var tooManyCreeps = numCreeps >= 10; // EXPERIMENT
+    var tooManyCreeps = numCreeps >= 7;
     // before: harvested = 14.2K, on creeps = 5750
     var maxEnergy = room.energyAvailable === room.energyCapacityAvailable;
     var maxToSpend = room.energyAvailable >= MAX_TO_SPEND;
