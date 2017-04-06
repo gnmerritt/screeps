@@ -1,5 +1,6 @@
 var c = require('constants');
 var claimer = require('role.claimer');
+var optimizeWorkers = require('optimize.workers');
 
 function countRoles(room, role) {
   return _.filter(room.find(FIND_MY_CREEPS), (creep) => creep.memory.role == role).length;
@@ -64,13 +65,16 @@ function spawnCreep(spawn, energy) {
 var MAX_TO_SPEND = 1200;
 
 function run() {
+  optimizeWorkers.initMemory();
+  optimizeWorkers.checkEnergy();
+
   for (var name in Game.spawns) {
     var spawn = Game.spawns[name];
     var room = spawn.room;
 
     var numCreeps = room.find(FIND_MY_CREEPS).length;
     var noCreeps = numCreeps === 0 && room.energyAvailable >= 300;
-    var tooManyCreeps = numCreeps >= 7;
+    var tooManyCreeps = numCreeps >= optimizeWorkers.getMaxCreeps(room.name);
     // before: harvested = 14.2K, on creeps = 5750
     var maxEnergy = room.energyAvailable === room.energyCapacityAvailable;
     var maxToSpend = room.energyAvailable >= MAX_TO_SPEND;
