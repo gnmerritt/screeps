@@ -15,7 +15,7 @@ function getRole(room) {
 
 function getCost(body) {
   var cost = 0;
-  for (piece in body) {
+  for (var piece in body) {
     cost += c.costs[body[piece]];
   }
   return cost;
