@@ -1,7 +1,19 @@
+var common = require('role.common');
+
 var roleBuilder = {
   /** @param {Creep} creep **/
   run: function(creep) {
-    if(creep.memory.building && creep.carry.energy == 0) {
+    if (creep.memory.target) {
+      if (creep.memory.target === creep.room.name) {
+        delete creep.memory.target;
+        creep.say('arrived');
+      } else {
+        common.goToRoom(creep, creep.memory.target);
+        return;
+      }
+    }
+
+    if (creep.memory.building && creep.carry.energy == 0) {
       creep.memory.building = false;
       creep.say('🔄 harvest');
     }

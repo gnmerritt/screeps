@@ -1,3 +1,5 @@
+var common = require('role.common');
+
 var roleClaimer = {
   /**
    * @param {Creep} creep
@@ -16,12 +18,7 @@ var roleClaimer = {
 
     if (target && room != target) {
       // not in the right place yet
-      creep.say('to ' + target);
-      var route = Game.map.findRoute(room, target);
-      if (route.length > 0) {
-        var exit = creep.pos.findClosestByRange(route[0].exit);
-        creep.moveTo(exit, {visualizePathStyle: {stroke: '#ffaa00'}});
-      }
+      common.goToRoom(creep, target);
     }
     else if (room == target) {
       // we made it! go claim the new controller

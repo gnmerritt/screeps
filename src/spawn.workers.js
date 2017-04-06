@@ -92,5 +92,6 @@ function run() {
 
 module.exports = {
   run: run,
-  getCost: getCost
+  getCost: getCost,
+  countRoles: countRoles
 };
