@@ -58,7 +58,7 @@ function getBody(role, energy) {
 function spawnCreep(spawn, energy) {
   var role = getRole(spawn.room);
   var body = getBody(role, energy);
-  console.log('Spawning a ' + role + ' using ' + energy + ' energy ' + body);
+  spawn.room.log('Spawning a ' + role + ' using ' + energy + ' energy ' + body);
   spawn.createCreep(body, undefined, {role: role});
 }
 

@@ -52,7 +52,7 @@ var roleClaimer = {
   },
 
   spawnExpander: function(spawn) {
-    console.log('Spawning an expander creep');
+    spawn.room.log('Spawning an expander creep');
     spawn.createCreep([WORK,CARRY,CLAIM,MOVE,MOVE,MOVE], undefined, {role: 'claimer'});
   }
 };

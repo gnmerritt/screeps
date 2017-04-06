@@ -8,6 +8,8 @@ var spawnWorkers = require('spawn.workers');
 var memory = require('memory');
 var bootstrap = require('bootstrap.room');
 
+require('prototypes'); // apply prototype modifications
+
 module.exports.loop = function () {
   if (Game.time % 100 === 0) {
     memory.cleanup();

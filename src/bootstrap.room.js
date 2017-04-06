@@ -44,7 +44,7 @@ function maybeSendWorker(room) {
     if (builders.length === 0 || alreadySent.length > 0) continue;
 
     var toSend = builders[0];
-    console.log('Sending builder ' + toSend.name + ' from ' + room.name + ' to ' + name);
+    room.log('Sending builder ' + toSend.name + ' from ' + room.name + ' to ' + name);
     toSend.memory.target = name;
   }
 }
