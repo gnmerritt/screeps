@@ -42,12 +42,13 @@ function checkEnergy() {
     console.log('Optimizer ran: wasted ticks = ' + wastedTicks + ' and energy = ' + wastedEnergy);
 
     // make adjustments if necessary
+    var numCreeps = room.find(FIND_MY_CREEPS).length;
     if (wastedEnergy > 500) {
       console.log('Too much wasted energy, increasing creeps. Saw ' + wastedEnergy);
-      Memory.rooms[name].maxCreeps += 1;
+      Memory.rooms[name].maxCreeps = numCreeps + 1;
     } else if (wastedTicks > 50) {
       console.log('Too many wasted ticks, decreasing creeps. Saw ' + wastedTicks);
-      Memory.rooms[name].maxCreeps -= 1;
+      Memory.rooms[name].maxCreeps = numCreeps - 1;
     }
   }
 }
