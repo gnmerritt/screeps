@@ -73,8 +73,6 @@ function switchRole(room, count, from, to) {
   }
 }
 
-var MAX_TO_SPEND = 1800;
-
 function run() {
   optimizeWorkers.initMemory();
   optimizeWorkers.checkEnergy();
@@ -91,15 +89,14 @@ function run() {
     var noCreeps = (numCreeps === 0 || numHarvesters === 0) && room.energyAvailable >= 300;
     var tooManyCreeps = numCreeps >= optimizeWorkers.getMaxCreeps(room.name);
     var maxEnergy = room.energyAvailable === room.energyCapacityAvailable;
-    var maxToSpend = room.energyAvailable >= MAX_TO_SPEND;
     // TODO: handle energy in multiple spawns?
 
     var spawnExpander = !noCreeps && countRoles(room, 'claimer') === 0 && claimer.shouldExpand(room);
     if (spawnExpander) {
       claimer.spawnExpander(spawn);
     }
-    else if (!tooManyCreeps && (maxEnergy || maxToSpend || noCreeps)) {
-      spawnCreep(spawn, Math.min(MAX_TO_SPEND, room.energyAvailable));
+    else if (!tooManyCreeps && (maxEnergy || noCreeps)) {
+      spawnCreep(spawn, room.energyAvailable);
     }
   }
 }
