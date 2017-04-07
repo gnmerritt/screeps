@@ -43,7 +43,7 @@ function checkEnergy() {
 
     // make adjustments if necessary
     var numCreeps = room.find(FIND_MY_CREEPS).length;
-    if (wastedEnergy > 500) {
+    if (wastedEnergy > 500 && numCreeps < 10) {
       room.log('Too much wasted energy, increasing creeps. Saw ' + wastedEnergy);
       Memory.rooms[name].maxCreeps = numCreeps + 1;
     } else if (wastedTicks > 50) {

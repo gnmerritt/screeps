@@ -21,6 +21,7 @@ module.exports.loop = function () {
 
   for (var name in Game.creeps) {
     var creep = Game.creeps[name];
+    creep.tick();
     if (healing.checkLife(creep)) {
       continue;
     }

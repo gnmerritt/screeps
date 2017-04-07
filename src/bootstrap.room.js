@@ -1,4 +1,5 @@
 var spawn = require('spawn.workers');
+var optimize = require('optimize.workers');
 
 var RATE = 5;
 
@@ -8,18 +9,19 @@ var RATE = 5;
 function roomNeedsWorker(room) {
   if (Game.time % RATE != 0) return;
 
-  var spawns = room.find(FIND_MY_SPAWNS);
-  if (spawns.length) {
-    setNeedsWorker(room, false);
-  }
+  var spawns = room.find(FIND_MY_SPAWNS).length;
   var underConstruction = room.find(FIND_CONSTRUCTION_SITES, {
     filter: (site) => site.structureType == STRUCTURE_SPAWN
-  });
-  if (!underConstruction.length) {
+  }).length;
+  // don't send helpers to rooms without at least a spawn construction site
+  if (!underConstruction && !spawns) {
     setNeedsWorker(room, false);
   }
-  var creeps = room.find(FIND_MY_CREEPS).length;
-  setNeedsWorker(room, creeps === 0);
+  // how many creeps from higher leveled rooms are in this room
+  var fatCreeps = room.find(FIND_MY_CREEPS, {
+    filter: creep => creep.memory.cost > room.energyCapacityAvailable
+  });
+  setNeedsWorker(room, fatCreeps.length < optimize.getMaxCreeps(room.name));
 }
 
 function setNeedsWorker(room, status) {

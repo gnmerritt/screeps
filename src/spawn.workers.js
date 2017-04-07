@@ -62,6 +62,17 @@ function spawnCreep(spawn, energy) {
   spawn.createCreep(body, undefined, {role: role});
 }
 
+function switchRole(room, count, from, to) {
+  var fromCreeps = room.find(FIND_MY_CREEPS, {
+    filter: (creep) => creep.memory.role === from
+  });
+  for (var i = 0; i < count && i < fromCreeps.length; i++) {
+    var toSwitch = fromCreeps[i];
+    toSwitch.memory.role = to;
+    room.log('Switched ' + toSwitch.name + ' to ' + to);
+  }
+}
+
 var MAX_TO_SPEND = 1200;
 
 function run() {
@@ -74,6 +85,9 @@ function run() {
 
     var numCreeps = room.find(FIND_MY_CREEPS).length;
     var numHarvesters = countRoles(room, 'harvester');
+    if (numHarvesters < 2 && numCreeps > 2) {
+      switchRole(room, 2, 'builder', 'harvester');
+    }
     var noCreeps = (numCreeps === 0 || numHarvesters === 0) && room.energyAvailable >= 300;
     var tooManyCreeps = numCreeps >= optimizeWorkers.getMaxCreeps(room.name);
     // before: harvested = 14.2K, on creeps = 5750

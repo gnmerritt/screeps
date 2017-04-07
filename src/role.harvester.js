@@ -20,9 +20,13 @@ var roleHarvester = {
 
     if (creep.memory.harvesting) {
       var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+      if (!source) {
+        return creep.idle();
+      }
       var success = creep.harvest(source);
       if (success === ERR_NOT_IN_RANGE || success === ERR_NOT_ENOUGH_RESOURCES) {
-        creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
+        var moved = creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
+        if (moved === ERR_NO_PATH) creep.idle();
       }
     } else {
       var target;
