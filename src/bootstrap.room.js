@@ -1,7 +1,7 @@
 var spawn = require('spawn.workers');
 var optimize = require('optimize.workers');
 
-var RATE = 5;
+var RATE = 10;
 
 /**
  * Writes into memory if this room needs workers to be sent to it
@@ -38,7 +38,6 @@ function maybeSendWorker(room) {
     if (!Memory.needsWorkers[name] || name === room.name) continue;
     var target = Game.rooms[name];
     if (room.controller.level <= target.controller.level) continue;
-
     var workers = room.find(FIND_MY_CREEPS, {
       filter: (creep) => creep.memory.role === 'harvester'
     });

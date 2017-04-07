@@ -1,7 +1,19 @@
+var common = require('role.common');
+
 var roleHarvester = {
 
   /** @param {Creep} creep **/
   run: function(creep) {
+    if (creep.memory.target) {
+      if (creep.memory.target === creep.room.name) {
+        delete creep.memory.target;
+        creep.say('arrived');
+      } else {
+        common.goToRoom(creep, creep.memory.target);
+        return;
+      }
+    }
+
     if (creep.memory.harvesting && creep.carry.energy === creep.carryCapacity) {
       delete creep.memory.harvesting;
       creep.say('depositing');
