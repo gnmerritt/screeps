@@ -26,8 +26,8 @@ function checkIdle() {
     var numCreeps = creeps.length
     idle = idle / numCreeps;
 
-    if (idle > 30) {
-      room.log('Creep idle rate over 30%, decreasing creeps. Saw ' + idle + '%');
+    if (idle > 25) {
+      room.log('Creep idle rate over 25%, decreasing creeps. Saw ' + idle + '%');
       Memory.rooms[name].maxCreeps = numCreeps - 1;
     }
   }
