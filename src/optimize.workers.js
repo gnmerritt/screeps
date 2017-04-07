@@ -1,3 +1,4 @@
+var IDLE_RATE = 200;
 var RATE = 10;
 
 function initMemory() {
@@ -14,7 +15,28 @@ function initMemory() {
   }
 }
 
+function checkIdle() {
+  for (var name in Game.rooms) {
+    var room = Game.rooms[name];
+    var creeps = room.find(FIND_MY_CREEPS);
+    var idle = 0;
+    for (var creep of creeps) {
+      idle += creep.idlePercent();
+    }
+    var numCreeps = creeps.length
+    idle = idle / numCreeps;
+
+    if (idle > 30) {
+      room.log('Creep idle rate over 30%, decreasing creeps. Saw ' + idle + '%');
+      Memory.rooms[name].maxCreeps = numCreeps - 1;
+    }
+  }
+}
+
 function checkEnergy() {
+  if (Game.time % IDLE_RATE == 0) {
+    checkIdle();
+  }
   if (Game.time % RATE != 0) {
     return;
   }
@@ -43,7 +65,7 @@ function checkEnergy() {
 
     // make adjustments if necessary
     var numCreeps = room.find(FIND_MY_CREEPS).length;
-    if (wastedEnergy > 500 && numCreeps < 10) {
+    if (wastedEnergy > 500) {
       room.log('Too much wasted energy, increasing creeps. Saw ' + wastedEnergy);
       Memory.rooms[name].maxCreeps = numCreeps + 1;
     } else if (wastedTicks > 50) {

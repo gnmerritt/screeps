@@ -73,7 +73,7 @@ function switchRole(room, count, from, to) {
   }
 }
 
-var MAX_TO_SPEND = 1200;
+var MAX_TO_SPEND = 1800;
 
 function run() {
   optimizeWorkers.initMemory();
@@ -90,7 +90,6 @@ function run() {
     }
     var noCreeps = (numCreeps === 0 || numHarvesters === 0) && room.energyAvailable >= 300;
     var tooManyCreeps = numCreeps >= optimizeWorkers.getMaxCreeps(room.name);
-    // before: harvested = 14.2K, on creeps = 5750
     var maxEnergy = room.energyAvailable === room.energyCapacityAvailable;
     var maxToSpend = room.energyAvailable >= MAX_TO_SPEND;
     // TODO: handle energy in multiple spawns?
