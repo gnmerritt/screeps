@@ -32,7 +32,7 @@ function setNeedsWorker(room, status) {
 }
 
 function maybeSendWorker(room) {
-  if (Game.time % RATE != 0) return;
+  if (Game.time % 2 * RATE != 0) return;
 
   for (var name in Memory.needsWorkers) {
     if (!Memory.needsWorkers[name] || name === room.name) continue;
