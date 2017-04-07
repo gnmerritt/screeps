@@ -1,6 +1,5 @@
 var healing = require('creep.healing');
 var roleHarvester = require('role.harvester');
-var roleBuilder = require('role.builder');
 var claimer = require('role.claimer');
 var towers = require('role.tower');
 
@@ -28,10 +27,8 @@ module.exports.loop = function () {
 
     switch (creep.memory.role) {
       case 'harvester':
-        roleHarvester.run(creep);
-        break;
       case 'builder':
-        roleBuilder.run(creep);
+        roleHarvester.run(creep);
         break;
       case 'claimer':
         claimer.run(creep);

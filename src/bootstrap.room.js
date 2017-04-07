@@ -39,13 +39,13 @@ function maybeSendWorker(room) {
     var target = Game.rooms[name];
     if (room.controller.level <= target.controller.level) continue;
 
-    var builders = room.find(FIND_MY_CREEPS, {
-      filter: (creep) => creep.memory.role === 'builder'
+    var workers = room.find(FIND_MY_CREEPS, {
+      filter: (creep) => creep.memory.role === 'harvester'
     });
-    var alreadySent = _.filter(builders, c => c.memory.target);
-    if (builders.length === 0 || alreadySent.length > 0) continue;
+    var alreadySent = _.filter(workers, c => c.memory.target);
+    if (workers.length === 0 || alreadySent.length > 0) continue;
 
-    var toSend = builders[0];
+    var toSend = workers[0];
     room.log('Sending builder ' + toSend.name + ' from ' + room.name + ' to ' + name);
     toSend.memory.target = name;
   }

@@ -3,13 +3,24 @@ var roleHarvester = {
   /** @param {Creep} creep **/
   run: function(creep) {
     if (creep.memory.harvesting && creep.carry.energy === creep.carryCapacity) {
-      creep.memory.harvesting = false;
+      delete creep.memory.harvesting;
       creep.say('depositing');
     }
     if (!creep.memory.harvesting && creep.carry.energy === 0) {
-      creep.memory.upgrading = false;
+      delete creep.memory.upgrading;
+      delete creep.memory.building;
       creep.memory.harvesting = true;
       creep.say('🔄 harvest');
+    }
+    if (creep.memory.building) {
+      var target = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+      if (target) {
+        if (creep.build(target) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
+        }
+      } else {
+        creep.memory.building = false;
+      }
     }
     if (creep.memory.upgrading) {
       if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
@@ -46,12 +57,22 @@ var roleHarvester = {
           }
         });
       }
-
+      // give energy to the thing we found
       if (target) {
         if (creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
         }
-      } else {
+        return;
+      }
+      // otherwise, construct any pending buildings
+      target = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+      if (creep.build(target) == ERR_NOT_IN_RANGE) {
+        creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
+      }
+      if (target) {
+        creep.say('building');
+        creep.memory.building = true;
+      } else { // finally, go upgrade the controller
         creep.say('upgrading');
         creep.memory.upgrading = true;
       }

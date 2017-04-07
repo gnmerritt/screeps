@@ -7,11 +7,8 @@ function countRoles(room, role) {
 }
 
 function getRole(room) {
-  if (countRoles(room, 'harvester') < 3) {
-    return 'harvester';
-  }
+  return 'harvester';
   // TODO: check if we are under attack
-  return 'builder';
 }
 
 function getCost(body) {
@@ -82,11 +79,7 @@ function run() {
     var room = spawn.room;
 
     var numCreeps = room.find(FIND_MY_CREEPS).length;
-    var numHarvesters = countRoles(room, 'harvester');
-    if (numHarvesters < 2 && numCreeps > 2) {
-      switchRole(room, 2, 'builder', 'harvester');
-    }
-    var noCreeps = (numCreeps === 0 || numHarvesters === 0) && room.energyAvailable >= 300;
+    var noCreeps = numCreeps === 0 && room.energyAvailable >= 300;
     var tooManyCreeps = numCreeps >= optimizeWorkers.getMaxCreeps(room.name);
     var maxEnergy = room.energyAvailable === room.energyCapacityAvailable;
     // TODO: handle energy in multiple spawns?
