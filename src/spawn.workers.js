@@ -1,4 +1,3 @@
-var c = require('constants');
 var claimer = require('role.claimer');
 var optimizeWorkers = require('optimize.workers');
 
@@ -16,8 +15,8 @@ function getRole(room) {
 
 function getCost(body) {
   var cost = 0;
-  for (var piece in body) {
-    cost += c.costs[body[piece]];
+  for (var piece of body) {
+    cost += BODYPART_COST[piece];
   }
   return cost;
 }

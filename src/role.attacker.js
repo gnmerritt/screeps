@@ -12,9 +12,9 @@ var attacker = {
         }
       }
 
-      var target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+      var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
       if (!target) {
-        target = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
+        target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
           filter: (structure) => {
             var type = structure.structureType;
             return type !== STRUCTURE_ROAD && type !== STRUCTURE_CONTROLLER;
@@ -24,7 +24,7 @@ var attacker = {
 
       if (target) {
         if (creep.attack(target) === ERR_NOT_IN_RANGE) {
-          creep.moveTo(target, {visualizePathStyle: {stroke: '#ff0000'}});
+          creep.moveTo(target.pos, {visualizePathStyle: {stroke: '#ff0000'}});
         }
       } else {
         delete Memory.warTarget;

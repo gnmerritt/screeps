@@ -44,6 +44,10 @@ var roleHarvester = {
     if (creep.memory.harvesting) {
       var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
       if (!source) {
+        if (creep.carry.energy > 0) {
+          // do something with the energy we have so far
+          delete creep.memory.harvesting;
+        }
         return creep.idle();
       }
       var success = creep.harvest(source);
