@@ -12,7 +12,7 @@ function checkLife(creep) {
   var shouldHeal = creep.ticksToLive < 200
     && creep.memory.cost > room.energyCapacityAvailable
     && room.find(FIND_MY_SPAWNS).length > 0
-    && room.find(FIND_MY_CREEPS).length <= optimize.getMaxCreeps(room.name);
+    && spawn.countRoles(room, 'harvester') <= optimize.getMaxCreeps(room.name);
 
   if (shouldHeal && !creep.memory.healing) {
     creep.say('recharging');
