@@ -14,11 +14,18 @@ var roleHarvester = {
       }
     }
 
-    if (creep.memory.harvesting && creep.carry.energy === creep.carryCapacity) {
+    var harvesting = creep.memory.harvesting;
+
+    // get the RCL up to 2 as quickly as possible to keep from losing the room
+    if (!harvesting && creep.room.controller && creep.room.controller.level < 2) {
+      creep.memory.upgrading = true;
+    }
+
+    if (harvesting && creep.carry.energy === creep.carryCapacity) {
       delete creep.memory.harvesting;
       creep.say('depositing');
     }
-    if (!creep.memory.harvesting && creep.carry.energy === 0) {
+    if (!harvesting && creep.carry.energy === 0) {
       delete creep.memory.upgrading;
       delete creep.memory.building;
       creep.memory.harvesting = true;
