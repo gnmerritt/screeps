@@ -77,7 +77,7 @@ function checkEnergy() {
 }
 
 function getMaxCreeps(roomName) {
-  return Memory.rooms[roomName].maxCreeps;
+  return Math.max(2, Memory.rooms[roomName].maxCreeps);
 }
 
 module.exports = {
