@@ -18,7 +18,9 @@ function initMemory() {
 function checkIdle() {
   for (var name in Game.rooms) {
     var room = Game.rooms[name];
-    var creeps = room.find(FIND_MY_CREEPS);
+    var creeps = room.find(FIND_MY_CREEPS, {
+      filter: c => c.memory.role === 'harvester'
+    });
     var idle = 0;
     for (var creep of creeps) {
       idle += creep.idlePercent();
