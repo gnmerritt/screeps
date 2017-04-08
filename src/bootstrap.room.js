@@ -44,7 +44,7 @@ function maybeSendWorker(room) {
       filter: (creep) => creep.memory.role === 'harvester'
     });
     var alreadySent = _.filter(workers, c => c.memory.target);
-    if (workers.length < 3 || alreadySent.length > 0) continue;
+    if (workers.length < optimize.getMaxCreeps(room.name) || alreadySent.length > 0) continue;
 
     var toSend = workers[0];
     room.log('Sending creep ' + toSend.name + ' from ' + room.name + ' to ' + name);
