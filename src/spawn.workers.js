@@ -7,6 +7,9 @@ function countRoles(room, role) {
 }
 
 function getRole(room) {
+  if (Memory.warTarget && countRoles(room, 'harvester') > 3) {
+    return 'attacker';
+  }
   return 'harvester';
   // TODO: check if we are under attack
 }
@@ -26,7 +29,14 @@ var adds = [
   [MOVE]
 ];
 
+function attackBody() {
+  return [ATTACK,ATTACK,ATTACK,MOVE,MOVE,MOVE];
+}
+
 function getBody(role, energy) {
+  if (role === 'attacker') {
+    return attackBody();
+  }
   var base = [WORK, CARRY, MOVE];
   var cost = getCost(base);
 
@@ -52,8 +62,7 @@ function getBody(role, energy) {
   return base;
 }
 
-function spawnCreep(spawn, energy) {
-  var role = getRole(spawn.room);
+function spawnCreep(spawn, role, energy) {
   var body = getBody(role, energy);
   spawn.room.log('Spawning a ' + role + ' using ' + energy + ' energy ' + body);
   spawn.createCreep(body, undefined, {role: role});
@@ -78,18 +87,26 @@ function run() {
     var spawn = Game.spawns[name];
     var room = spawn.room;
 
-    var numCreeps = room.find(FIND_MY_CREEPS).length;
+    var creeps = room.find(FIND_MY_CREEPS);
+    var numCreeps = creeps.length;
     var noCreeps = numCreeps === 0 && room.energyAvailable >= 300;
     var tooManyCreeps = numCreeps >= optimizeWorkers.getMaxCreeps(room.name);
     var maxEnergy = room.energyAvailable === room.energyCapacityAvailable;
+    var usingFatCreeps = _.filter(creeps, c => c.memory.cost > room.energyCapacityAvailable).length > 0;
     // TODO: handle energy in multiple spawns?
+
+    var role = getRole(spawn.room);
+    var wartime = role === 'attacker' && room.energyAvailable >= getCost(attackBody());
 
     var spawnExpander = !noCreeps && countRoles(room, 'claimer') === 0 && claimer.shouldExpand(room);
     if (spawnExpander) {
       claimer.spawnExpander(spawn);
     }
-    else if (!tooManyCreeps && (maxEnergy || noCreeps)) {
-      spawnCreep(spawn, room.energyAvailable);
+    else if (wartime || (!tooManyCreeps && !usingFatCreeps && (maxEnergy || noCreeps))) {
+      if (wartime) {
+        room.log("Wartime! Making a soldier");
+      }
+      spawnCreep(spawn, role, room.energyAvailable);
     }
   }
 }

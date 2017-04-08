@@ -1,4 +1,4 @@
-var IDLE_RATE = 200;
+var IDLE_RATE = 300;
 var RATE = 10;
 
 function initMemory() {
@@ -22,6 +22,7 @@ function checkIdle() {
     var idle = 0;
     for (var creep of creeps) {
       idle += creep.idlePercent();
+      creep.resetIdle();
     }
     var numCreeps = creeps.length
     idle = idle / numCreeps;

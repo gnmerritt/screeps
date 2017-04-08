@@ -55,7 +55,7 @@ var roleHarvester = {
       var target;
       if (creep.room.find(FIND_MY_CREEPS).length > 3) {
         // prioritize an empty tower over harvesting to make new creeps
-       target = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
+          target = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
           filter: (structure) => structure.structureType === STRUCTURE_TOWER && structure.energy < 200
         });
       }
@@ -64,7 +64,10 @@ var roleHarvester = {
         target = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
           filter: (structure) => {
             var type = structure.structureType;
-            return (type == STRUCTURE_EXTENSION || type == STRUCTURE_SPAWN || type == STRUCTURE_TOWER)
+            if (type == STRUCTURE_TOWER) {
+              return structure.energy < 900;
+            }
+            return (type == STRUCTURE_EXTENSION || type == STRUCTURE_SPAWN)
                && structure.energy < structure.energyCapacity;
           }
         });

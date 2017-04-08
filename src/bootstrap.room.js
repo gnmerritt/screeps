@@ -16,6 +16,7 @@ function roomNeedsWorker(room) {
   // don't send helpers to rooms without at least a spawn construction site
   if (!underConstruction && !spawns) {
     setNeedsWorker(room, false);
+    return;
   }
   // how many creeps from higher leveled rooms are in this room
   var fatCreeps = room.find(FIND_MY_CREEPS, {
@@ -37,15 +38,16 @@ function maybeSendWorker(room) {
   for (var name in Memory.needsWorkers) {
     if (!Memory.needsWorkers[name] || name === room.name) continue;
     var target = Game.rooms[name];
+    if (!room || !room.controller || !target || !target.controller) continue;
     if (room.controller.level <= target.controller.level) continue;
     var workers = room.find(FIND_MY_CREEPS, {
       filter: (creep) => creep.memory.role === 'harvester'
     });
     var alreadySent = _.filter(workers, c => c.memory.target);
-    if (workers.length === 0 || alreadySent.length > 0) continue;
+    if (workers.length < 3 || alreadySent.length > 0) continue;
 
     var toSend = workers[0];
-    room.log('Sending builder ' + toSend.name + ' from ' + room.name + ' to ' + name);
+    room.log('Sending creep ' + toSend.name + ' from ' + room.name + ' to ' + name);
     toSend.memory.target = name;
   }
 }

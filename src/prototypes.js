@@ -21,3 +21,8 @@ Creep.prototype.idle = function() {
 Creep.prototype.idlePercent = function() {
   return 100 * this.getIdle() / this.getTicks();
 }
+
+Creep.prototype.resetIdle = function() {
+  this.memory.idle = 0;
+  this.memory.life = 1;
+}
