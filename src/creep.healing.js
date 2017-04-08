@@ -11,6 +11,7 @@ function checkLife(creep) {
   var room = creep.room;
   var shouldHeal = creep.ticksToLive < 200
     && creep.memory.cost > room.energyCapacityAvailable
+    && room.energyAvailable > 100
     && room.find(FIND_MY_SPAWNS).length > 0
     && spawn.countRoles(room, 'harvester') <= optimize.getMaxCreeps(room.name);
 
