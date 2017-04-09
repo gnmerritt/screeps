@@ -43,6 +43,7 @@ function maybeSendWorker(room) {
     if (room.energyCapacityAvailable <= target.energyCapacityAvailable) continue;
     var workers = room.find(FIND_MY_CREEPS, {
       filter: (creep) => creep.memory.role === 'harvester'
+        && creep.memory.cost > target.energyCapacityAvailable
     });
     var alreadySent = _.filter(workers, c => c.memory.target);
     if (workers.length < optimize.getMaxCreeps(room.name) || alreadySent.length > 0) continue;
