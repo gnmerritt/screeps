@@ -49,11 +49,20 @@ var roleHarvester = {
     }
 
     if (creep.memory.harvesting) {
+      if (creep.ticksToLive < 20) {
+        creep.say('old!');
+        delete creep.memory.harvesting;
+      }
       var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
       if (!source) {
         if (creep.carry.energy > 0) {
           // do something with the energy we have so far
           delete creep.memory.harvesting;
+        } else {
+          // move towards the next-to-regen energy source
+          var sources = creep.room.find(FIND_SOURCES);
+          sources.sort((a, b) => a.ticksToRegeneration < b.ticksToRegeneration);
+          creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ff0000'}});
         }
         return creep.idle();
       }
