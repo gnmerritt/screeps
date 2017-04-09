@@ -61,7 +61,7 @@ var roleHarvester = {
         } else {
           // move towards the next-to-regen energy source
           var sources = creep.room.find(FIND_SOURCES);
-          sources.sort((a, b) => a.ticksToRegeneration < b.ticksToRegeneration);
+          sources.sort((a, b) => a.ticksToRegeneration > b.ticksToRegeneration);
           creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ff0000'}});
         }
         return creep.idle();
