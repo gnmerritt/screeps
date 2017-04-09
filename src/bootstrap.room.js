@@ -40,6 +40,7 @@ function maybeSendWorker(room) {
     var target = Game.rooms[name];
     if (!room || !room.controller || !target || !target.controller) continue;
     if (room.controller.level <= target.controller.level) continue;
+    if (room.energyCapacityAvailable <= target.energyCapacityAvailable) continue;
     var workers = room.find(FIND_MY_CREEPS, {
       filter: (creep) => creep.memory.role === 'harvester'
     });
