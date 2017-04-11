@@ -1,5 +1,6 @@
 var IDLE_RATE = 300;
 var RATE = 10;
+var CREEP_LIFETIME_CYCLES = CREEP_LIFE_TIME / ENERGY_REGEN_TIME;
 
 function initMemory() {
   if (!Memory.rooms) {
@@ -29,11 +30,23 @@ function checkIdle() {
     var numCreeps = creeps.length
     idle = idle / numCreeps;
 
-    if (idle > 25) {
-      room.log('Creep idle rate over 25%, decreasing creeps. Saw ' + idle + '%');
+    // Was the equivalent of an entire creep idle this cycle?
+    if (idle * numCreeps > 100) {
+      room.log('Creeps idle, decreasing. Saw ' + idle + '% * ' + numCreeps + ' = ' + (idle * numCreeps));
       Memory.rooms[name].maxCreeps = numCreeps - 1;
     }
   }
+}
+
+function creepCost(room) {
+  var creeps = room.find(FIND_MY_CREEPS, {
+    filter: c => c.memory.role === 'harvester'
+  });
+  var cost = room.energyCapacityAvailable;
+  for (var creep of creeps) {
+    cost = Math.max(cost, creep.memory.cost);
+  }
+  return cost;
 }
 
 function checkEnergy() {
@@ -47,8 +60,7 @@ function checkEnergy() {
     var room = Game.rooms[name];
     if (room.find(FIND_MY_SPAWNS).length === 0) continue;
     var sources = room.find(FIND_SOURCES);
-    var wastedEnergy = 0;
-    var wastedTicks = 999;
+    var unharvestedEnergy = 0;
 
     for (var source of sources) {
       var energy = source.energy;
@@ -56,24 +68,18 @@ function checkEnergy() {
 
       // if a source is about to regen, see if it has wasted energy
       if (toRegen <= RATE) {
-        wastedEnergy += energy;
-      }
-      // if a source has energy we haven't wasted any ticks
-      if (energy > 0) {
-        wastedTicks = 0;
-      } else if (energy === 0) {
-        wastedTicks = Math.min(wastedTicks, toRegen);
+        unharvestedEnergy += energy;
       }
     }
 
     // make adjustments if necessary
-    var numCreeps = room.find(FIND_MY_CREEPS).length;
-    if (wastedEnergy > 500) {
-      room.log('Too much wasted energy, increasing creeps. Saw ' + wastedEnergy);
+    var creepCostPerCycle = creepCost(room) / CREEP_LIFETIME_CYCLES;
+    if (unharvestedEnergy > 2 * creepCostPerCycle) {
+      room.log('Too much wasted energy, increasing creeps. Saw ' + unharvestedEnergy + '/' + creepCostPerCycle);
+      var numCreeps = room.find(FIND_MY_CREEPS, {
+        filter: c => c.memory.role === 'harvester'
+      }).length;
       Memory.rooms[name].maxCreeps = numCreeps + 1;
-    } else if (wastedTicks > 50) {
-      room.log('Too many wasted ticks, decreasing creeps. Saw ' + wastedTicks);
-      Memory.rooms[name].maxCreeps = numCreeps - 1;
     }
   }
 }
