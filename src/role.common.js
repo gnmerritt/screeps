@@ -35,6 +35,15 @@ function pathToRoom(creep, name) {
 
 var common = {
   goToRoom: function(creep, name) {
+    var room = creep.room.name;
+    var route = Game.map.findRoute(room, name);
+    if (route.length > 0) {
+      var exit = creep.pos.findClosestByPath(route[0].exit);
+      creep.moveTo(exit, {reusePath: 20, visualizePathStyle: {stroke: '#ffaa00'}});
+    }
+  },
+
+  goToRoomNew: function(creep, name) {
     PathFinder.use(true);
     var room = creep.room.name;
     var route = pathToRoom(creep, name);
