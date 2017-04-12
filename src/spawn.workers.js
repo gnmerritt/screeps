@@ -22,7 +22,7 @@ function getCost(body) {
 }
 
 var adds = [
-  [WORK, CARRY, MOVE, MOVE],
+  [WORK, CARRY, MOVE],
   [WORK, MOVE],
   [CARRY, MOVE],
   [MOVE]
@@ -58,7 +58,19 @@ function getBody(role, energy) {
       break;
     }
   }
-  return base;
+
+  // now remove any extra MOVE body parts
+  var numMoves = _.filter(base, b => b === MOVE).length;
+  var movesRequired = Math.ceil((base.length - numMoves) / 2);
+  for (var i in base) {
+    if (numMoves <= movesRequired) break;
+    if (base[i] === MOVE) {
+      base[i] = null;
+      numMoves -= 1;
+    }
+  }
+
+  return _.filter(base, b => b != null);
 }
 
 function spawnCreep(spawn, role, energy) {
