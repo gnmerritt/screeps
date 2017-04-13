@@ -17,7 +17,10 @@ var roleHarvester = {
     var harvesting = creep.memory.harvesting;
 
     // get the RCL up to 2 as quickly as possible to keep from losing the room
-    if (!harvesting && creep.room.controller && creep.room.controller.level < 2) {
+    var needControllerUpgrade = creep.room.controller
+      && creep.room.controller.my
+      && creep.room.controller.level < 2;
+    if (!harvesting && needControllerUpgrade) {
       creep.memory.upgrading = true;
     }
 
