@@ -9,6 +9,12 @@ var RATE = 10;
 function roomNeedsWorker(room) {
   if (Game.time % RATE != 0) return;
 
+  var controller = room.controller;
+  if (!controller || !controller.my) {
+    setNeedsWorker(room, false);
+    return;
+  }
+
   var spawns = room.find(FIND_MY_SPAWNS).length;
   var underConstruction = room.find(FIND_CONSTRUCTION_SITES, {
     filter: (site) => site.structureType == STRUCTURE_SPAWN
