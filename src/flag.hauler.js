@@ -39,10 +39,13 @@ function checkCreeps(flag, room) {
   }
 
   var haulerCreep = flag.memory.haulerName;
+  var maxHauled = flag.memory.maxHauled || 1000;
   if (!haulerCreep || !Game.creeps[haulerCreep]) {
     creepName = "Hauler_" + flag.name;
     memory.role = 'hauler';
-    spawn(room, makeBody(CARRY, CARRIES), memory, creepName);
+    // look at how much we hauled last lifetime, add one extra carry body part
+    var numCarries = Math.ceil(maxHauled / CARRY_CAPACITY) + 1;
+    spawn(room, makeBody(CARRY, numCarries), memory, creepName);
     flag.memory.haulerName = creepName;
   }
 }
