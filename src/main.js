@@ -1,9 +1,12 @@
 var healing = require('creep.healing');
 var roleHarvester = require('role.harvester');
 var roleAttacker = require('role.attacker');
+var roleHauler = require('role.hauler');
+var roleFlagHarvester = require('role.flagHarvester');
 var claimer = require('role.claimer');
 var towers = require('role.tower');
 
+var flags = require('flag.main');
 var spawnWorkers = require('spawn.workers');
 var memory = require('memory');
 var bootstrap = require('bootstrap.room');
@@ -15,6 +18,7 @@ module.exports.loop = function () {
     memory.cleanup();
   }
 
+  flags.run();
   spawnWorkers.run();
   towers.run();
   bootstrap.checkBootstrap();
@@ -28,8 +32,13 @@ module.exports.loop = function () {
 
     switch (creep.memory.role) {
       case 'harvester':
-      case 'builder':
         roleHarvester.run(creep);
+        break;
+      case 'hauler':
+        roleHauler.run(creep);
+        break;
+      case 'flagHarvester':
+        roleFlagHarvester.run(creep);
         break;
       case 'attacker':
         roleAttacker.run(creep);

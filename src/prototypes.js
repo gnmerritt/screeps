@@ -26,3 +26,7 @@ Creep.prototype.resetIdle = function() {
   this.memory.idle = 0;
   this.memory.life = 1;
 }
+
+Flag.prototype.log = function(message) {
+  console.log('flag[' + this.name + '] ' + message);
+}
