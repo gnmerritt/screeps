@@ -1,5 +1,13 @@
 var common = require('role.common');
 
+function goHome(flag, creep) {
+  var hauled = creep.carry.energy;
+  var maxHauled = flag.memory.maxHauled || 0;
+  flag.memory.maxHauled = Math.max(hauled, maxHauled);
+  creep.memory.harvesting = false;
+  creep.say('return');
+}
+
 function runCreep(creep) {
   var flag = Game.flags[creep.memory.flag];
   if (!flag) creep.memory.role = 'harvester';
@@ -9,8 +17,7 @@ function runCreep(creep) {
     creep.say('hauling');
   }
   if (creep.carry.energy === creep.carryCapacity && creep.memory.harvesting) {
-    creep.memory.harvesting = false;
-    creep.say('return');
+    goHome(flag, creep);
   }
 
   if (creep.memory.harvesting) {
@@ -25,7 +32,7 @@ function runCreep(creep) {
           creep.moveTo(resource);
         }
       } else if (creep.carry.energy > 0) {
-        creep.memory.harvesting = false;
+        goHome(flag, creep);
       }
     }
   } else {
