@@ -62,7 +62,7 @@ function resizeHarvester(flag) {
   var allowedIdle = 100 * 1 / harvesterSize;
 
   if (idle > allowedIdle) {
-    var newSize = harvesterSize - 1;
+    var newSize = Math.min(harvesterSize - 1, 3);
     flag.log('Decreasing harvester size to ' + newSize);
     flag.memory.harvesterSize = newSize;
   }
