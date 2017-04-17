@@ -1,13 +1,12 @@
-var HARVESTER_BODY = [WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE];
-
+var WORKS = 6;
 var CARRIES = 20;
 
-function haulerBody() {
+function makeBody(type, count) {
   var body = [];
-  for (var i = 0; i < CARRIES; i++) {
-    body.push(CARRY);
+  for (var i = 0; i < count; i++) {
+    body.push(type);
   }
-  for (i = 0; i < CARRIES / 2; i++) {
+  for (i = 0; i < count / 2; i++) {
     body.push(MOVE);
   }
   return body;
@@ -30,10 +29,11 @@ function checkCreeps(flag, room) {
   };
 
   var harvesterCreep = flag.memory.harvesterName;
+  var harvesterSize = flag.memory.harvesterSize || WORKS;
   if (!harvesterCreep || !Game.creeps[harvesterCreep]) {
     creepName = "Harvester_" + flag.name;
     memory.role = 'flagHarvester';
-    spawn(room, HARVESTER_BODY, memory, creepName);
+    spawn(room, makeBody(WORK, harvesterSize), memory, creepName);
     flag.memory.harvesterName = creepName;
     return;
   }
@@ -42,13 +42,32 @@ function checkCreeps(flag, room) {
   if (!haulerCreep || !Game.creeps[haulerCreep]) {
     creepName = "Hauler_" + flag.name;
     memory.role = 'hauler';
-    spawn(room, haulerBody(), memory, creepName);
+    spawn(room, makeBody(CARRY, CARRIES), memory, creepName);
     flag.memory.haulerName = creepName;
+  }
+}
+
+function resizeHarvester(flag) {
+  if (Game.time % 200 !== 0) return;
+
+  var harvesterCreep = flag.memory.harvesterName;
+  var harvester = Game.creeps[harvesterCreep];
+  if (!harvesterCreep || !harvester) return;
+
+  var harvesterSize = _.filter(harvester.body, b => b.type === WORK).length;
+  var idle = harvester.idlePercent();
+  var allowedIdle = 100 * 1 / harvesterSize;
+
+  if (idle > allowedIdle) {
+    var newSize = harvesterSize - 1;
+    flag.log('Decreasing harvester size to ' + newSize);
+    flag.memory.harvesterSize = newSize;
   }
 }
 
 function run(flag, room) {
   checkCreeps(flag, room);
+  resizeHarvester(flag);
 }
 
 module.exports = {

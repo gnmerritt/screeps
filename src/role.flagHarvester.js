@@ -18,6 +18,7 @@ function run(creep) {
     }
   } else {
     // move towards the next-to-regen energy source
+    creep.idle();
     var sources = creep.room.find(FIND_SOURCES);
     sources.sort((a, b) => a.ticksToRegeneration > b.ticksToRegeneration);
     creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ff0000'}});
