@@ -1,5 +1,7 @@
 var common = require('role.common');
 
+var STORAGE_MIN = 250000; // don't take energy from storage below this level
+
 var roleHarvester = {
 
   /** @param {Creep} creep **/
@@ -58,6 +60,20 @@ var roleHarvester = {
       }
       var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
       if (!source) {
+        var storage = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
+          filter: structure => structure.structureType === STRUCTURE_STORAGE
+            && structure.store[RESOURCE_ENERGY] > STORAGE_MIN
+        });
+        if (storage) {
+          creep.say('storage');
+          var space = creep.carryCapacity - _.sum(creep.carry);
+          if (creep.withdraw(storage, RESOURCE_ENERGY, space) === ERR_NOT_IN_RANGE) {
+            creep.moveTo(storage, {visualizePathStyle: {stroke: '#ff0000'}});
+          }
+          return;
+        }
+      }
+      if (!source) {
         if (creep.carry.energy > 0) {
           // do something with the energy we have so far
           delete creep.memory.harvesting;
@@ -103,7 +119,7 @@ var roleHarvester = {
         return;
       }
       // otherwise, construct any pending buildings
-      target = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+      target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
       if (creep.build(target) == ERR_NOT_IN_RANGE) {
         creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
       }
