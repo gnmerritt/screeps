@@ -124,7 +124,12 @@ function run() {
       }
       spawnCreep(spawn, role, room.energyAvailable);
     } else if (extractors.length > 0 && countRoles(room, 'miner') === 0) {
-      spawnCreep(spawn, 'miner', room.energyAvailable);
+      var minerals = spawn.pos.findClosestByRange(FIND_MINERALS, {
+        filter: m => m.mineralAmount > 0
+      });
+      if (minerals) {
+        spawnCreep(spawn, 'miner', room.energyAvailable);
+      }
     }
   }
 }
