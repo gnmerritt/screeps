@@ -39,14 +39,14 @@ function getBody(role, energy) {
   var base = [WORK, CARRY, MOVE];
   var cost = getCost(base);
 
-  while (cost < energy) {
+  while (cost < energy && base.length < MAX_CREEP_SIZE) {
     var remaining = energy - cost;
     var added = false;
 
     // add the largest chunk we can, bail if there isn't enough energy left
     for (var i in adds) {
       var toAdd = adds[i];
-      if (getCost(toAdd) < remaining) {
+      if (getCost(toAdd) < remaining && (toAdd.length + base.length) <= MAX_CREEP_SIZE) {
         base = base.concat(toAdd);
         cost = getCost(base);
         added = true;
