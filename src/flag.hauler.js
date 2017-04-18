@@ -50,6 +50,16 @@ function checkCreeps(flag, room) {
   }
 }
 
+function decayMaxHaul(flag) {
+  if (Game.time % 1000 !== 0) return;
+
+  var maxHauled = flag.memory.maxHauled || 0;
+  maxHauled -= 100;
+  maxHauled = Math.max(maxHauled, 200);
+  flag.log('Decaying max haul to ' + maxHauled);
+  flag.memory.maxHauled = maxHauled;
+}
+
 function resizeHarvester(flag) {
   if (Game.time % 200 !== 0) return;
 
@@ -71,6 +81,7 @@ function resizeHarvester(flag) {
 function run(flag, room) {
   checkCreeps(flag, room);
   resizeHarvester(flag);
+  decayMaxHaul(flag);
 }
 
 module.exports = {
