@@ -102,7 +102,7 @@ function run() {
     var room = spawn.room;
 
     var creeps = room.find(FIND_MY_CREEPS);
-    var numCreeps = creeps.length;
+    var numCreeps = countRoles(room, 'harvester');
     var noCreeps = numCreeps === 0 && room.energyAvailable >= 300;
     var tooManyCreeps = numCreeps >= optimizeWorkers.getMaxCreeps(room.name);
     var maxEnergy = room.energyAvailable === room.energyCapacityAvailable;
@@ -118,14 +118,13 @@ function run() {
     });
     if (spawnExpander) {
       claimer.spawnExpander(spawn);
-    } else if (extractors.length > 0 && countRoles(room, 'miner') === 0) {
-      spawnCreep(spawn, 'miner', room.energyAvailable);
-    }
-    else if (wartime || (!tooManyCreeps && !usingFatCreeps && (maxEnergy || noCreeps))) {
+    } else if (wartime || (!tooManyCreeps && !usingFatCreeps && (maxEnergy || noCreeps))) {
       if (wartime) {
         room.log("Wartime! Making a soldier");
       }
       spawnCreep(spawn, role, room.energyAvailable);
+    } else if (extractors.length > 0 && countRoles(room, 'miner') === 0) {
+      spawnCreep(spawn, 'miner', room.energyAvailable);
     }
   }
 }
