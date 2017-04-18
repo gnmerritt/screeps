@@ -70,7 +70,7 @@ var roleHarvester = {
           if (creep.withdraw(storage, RESOURCE_ENERGY, space) === ERR_NOT_IN_RANGE) {
             creep.moveTo(storage, {visualizePathStyle: {stroke: '#ff0000'}});
           }
-          return;
+          return creep.idle();
         }
       }
       if (!source) {
