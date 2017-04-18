@@ -113,8 +113,13 @@ function run() {
     var wartime = role === 'attacker' && room.energyAvailable >= getCost(attackBody());
 
     var spawnExpander = !noCreeps && countRoles(room, 'claimer') === 0 && claimer.shouldExpand(room);
+    var extractors = room.find(FIND_MY_STRUCTURES, {
+      filter: s => s.structureType === STRUCTURE_EXTRACTOR
+    });
     if (spawnExpander) {
       claimer.spawnExpander(spawn);
+    } else if (extractors.length > 0 && countRoles(room, 'miner') === 0) {
+      spawnCreep(spawn, 'miner', room.energyAvailable);
     }
     else if (wartime || (!tooManyCreeps && !usingFatCreeps && (maxEnergy || noCreeps))) {
       if (wartime) {
