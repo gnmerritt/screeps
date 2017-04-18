@@ -10,7 +10,7 @@ function roomNeedsWorker(room) {
   if (Game.time % RATE != 0) return;
 
   var controller = room.controller;
-  if (!controller || !controller.my) {
+  if (!controller || !controller.my || controller.level >= 6) {
     setNeedsWorker(room, false);
     return;
   }
