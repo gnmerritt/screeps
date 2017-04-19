@@ -51,7 +51,7 @@ function checkCreeps(flag, room) {
 }
 
 function decayMaxHaul(flag) {
-  if (Game.time % 1000 !== 0) return;
+  if (Game.time % 3000 !== 0) return;
 
   var maxHauled = flag.memory.maxHauled || 0;
   maxHauled -= 100;
