@@ -5,14 +5,6 @@ function countRoles(room, role) {
   return _.filter(room.find(FIND_MY_CREEPS), (creep) => creep.memory.role == role).length;
 }
 
-function getRole(room) {
-  if (Memory.warTarget && countRoles(room, 'harvester') > 3) {
-    return 'attacker';
-  }
-  return 'harvester';
-  // TODO: check if we are under attack
-}
-
 function getCost(body) {
   var cost = 0;
   for (var piece of body) {
@@ -21,22 +13,32 @@ function getCost(body) {
   return cost;
 }
 
-var adds = [
+var WORK_ADDS = [
   [WORK, CARRY, MOVE],
   [WORK, MOVE],
   [CARRY, MOVE],
   [MOVE]
 ];
 
-function attackBody() {
-  return [ATTACK,ATTACK,ATTACK,MOVE,MOVE,MOVE];
-}
+var DEFENSE_ADDS = [
+  [TOUGH, RANGED_ATTACK, MOVE, MOVE],
+  [TOUGH, ATTACK, MOVE, MOVE],
+  [ATTACK, MOVE],
+  [TOUGH, MOVE],
+  [MOVE],
+];
 
 function getBody(role, energy) {
-  if (role === 'attacker') {
-    return attackBody();
+  let adds, base, movesPerBody;
+  if (role === 'attacker' || role === 'defender') {
+    base = [TOUGH, TOUGH, MOVE, ATTACK, ATTACK, MOVE];
+    adds = DEFENSE_ADDS;
+    movesPerBody = 1;
+  } else {
+    adds = WORK_ADDS;
+    base = [WORK, CARRY, MOVE];
+    movesPerBody = 0.5;
   }
-  var base = [WORK, CARRY, MOVE];
   var cost = getCost(base);
 
   while (cost < energy && base.length < MAX_CREEP_SIZE) {
@@ -61,7 +63,7 @@ function getBody(role, energy) {
 
   // now remove any extra MOVE body parts
   var numMoves = _.filter(base, b => b === MOVE).length;
-  var movesRequired = Math.ceil((base.length - numMoves) / 2);
+  var movesRequired = Math.ceil((base.length - numMoves) * movesPerBody);
   for (var i in base) {
     if (numMoves <= movesRequired) break;
     if (base[i] === MOVE) {
@@ -107,22 +109,27 @@ function run() {
     var tooManyCreeps = numCreeps >= optimizeWorkers.getMaxCreeps(room.name);
     var maxEnergy = room.energyAvailable === room.energyCapacityAvailable;
     var usingFatCreeps = _.filter(creeps, c => c.memory.cost > room.energyCapacityAvailable).length > 0;
-    // TODO: handle energy in multiple spawns?
 
-    var role = getRole(spawn.room);
-    var wartime = role === 'attacker' && room.energyAvailable >= getCost(attackBody());
+    var wartime = Memory.warTarget && tooManyCreeps;
 
     var spawnExpander = !noCreeps && countRoles(room, 'claimer') === 0 && claimer.shouldExpand(room);
     var extractors = room.find(FIND_MY_STRUCTURES, {
       filter: s => s.structureType === STRUCTURE_EXTRACTOR
     });
-    if (spawnExpander) {
+
+    var baddies = room.find(FIND_HOSTILE_CREEPS);
+    var towers = room.find(FIND_MY_STRUCTURES, {
+      filter: s => s.structureType === STRUCTURE_TOWER
+    });
+
+    if (baddies.length > towers.length) {
+      spawnCreep(spawn, 'defender', Math.min(1500, room.energyAvailable));
+    } else if (spawnExpander) {
       claimer.spawnExpander(spawn);
-    } else if (wartime || (!tooManyCreeps && !usingFatCreeps && (maxEnergy || noCreeps))) {
-      if (wartime) {
-        room.log("Wartime! Making a soldier");
-      }
-      spawnCreep(spawn, role, room.energyAvailable);
+    } else if (wartime) {
+      spawnCreep(spawn, 'attacker', Math.min(2000, room.energyAvailable));
+    } else if (!tooManyCreeps && !usingFatCreeps && (maxEnergy || noCreeps)) {
+      spawnCreep(spawn, 'harvester', room.energyAvailable);
     } else if (extractors.length > 0 && countRoles(room, 'miner') === 0) {
       var minerals = spawn.pos.findClosestByRange(FIND_MINERALS, {
         filter: m => m.mineralAmount > 0
@@ -136,6 +143,7 @@ function run() {
 
 module.exports = {
   run: run,
+  getBody: getBody,
   getCost: getCost,
   countRoles: countRoles
 };
