@@ -30,3 +30,7 @@ Creep.prototype.resetIdle = function() {
 Flag.prototype.log = function(message) {
   console.log('flag[' + this.name + '] ' + message);
 }
+
+Structure.prototype.hpPercent = function() {
+  return 100 * this.hits / this.hitsMax;
+}

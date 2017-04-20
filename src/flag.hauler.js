@@ -33,6 +33,18 @@ function checkForAttackers(flag, room) {
   }
 }
 
+function checkForConstruction(flag, room) {
+  var noConstruction = flag.room.find(FIND_MY_CONSTRUCTION_SITES).length === 0;
+  var needRepairs = flag.room.find(FIND_MY_STRUCTURES, {
+    filter: s => s.hpPercent() < 30
+  });
+  if (noConstruction && needRepairs.length === 0) {
+    delete flag.memory.construction;
+  } else {
+    flag.memory.construction = true;
+  }
+}
+
 function checkCreeps(flag, room) {
   let creepName;
   var memory = {
@@ -48,6 +60,18 @@ function checkCreeps(flag, room) {
     var body = spawner.getBody('defender', Math.min(1500, room.energyAvailable));
     spawn(room, body, memory, creepName);
     flag.memory.defenderName = creepName;
+    return;
+  }
+
+  var builder = flag.memory.builder;
+  var needBuilder = !builder || !Game.creeps[builder];
+  if (flag.memory.construction && needBuilder) {
+    creepName = "Builder_" + flag.name;
+    memory.role = 'harvester';
+    memory.target = flag.room.name;
+    var body = spawner.getBody('harvester', Math.min(1000, room.energyAvailable));
+    spawn(room, body, memory, creepName);
+    flag.memory.builder = creepName;
     return;
   }
 
@@ -103,6 +127,7 @@ function resizeHarvester(flag) {
 
 function run(flag, room) {
   checkForAttackers(flag, room);
+  checkForConstruction(flag, room);
   checkCreeps(flag, room);
   resizeHarvester(flag);
   decayMaxHaul(flag);
