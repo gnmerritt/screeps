@@ -131,7 +131,11 @@ var roleHarvester = {
       }
       // usually towers will handle repairs, but as a fall back check here
       var repair = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-        filter: s => s.hpPercent() < 80
+        filter: s => {
+          var type = s.structureType;
+          return s.hpPercent() < 80 &&
+            type !== STRUCTURE_WALL && type !== STRUCTURE_RAMPART;
+        }
       });
       if (repair) {
         if (creep.repair(repair) == ERR_NOT_IN_RANGE) {
