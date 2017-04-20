@@ -42,6 +42,7 @@ var roleHarvester = {
         if (creep.build(target) == ERR_NOT_IN_RANGE) {
           creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
         }
+        return;
       } else {
         creep.memory.building = false;
       }
@@ -120,12 +121,22 @@ var roleHarvester = {
       }
       // otherwise, construct any pending buildings
       target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
-      if (creep.build(target) == ERR_NOT_IN_RANGE) {
-        creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
-      }
       if (target) {
         creep.say('building');
         creep.memory.building = true;
+        if (creep.build(target) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
+        }
+        return;
+      }
+      // usually towers will handle repairs, but as a fall back check here
+      var repair = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+        filter: s => s.hpPercent() < 80
+      });
+      if (repair) {
+        if (creep.repair(repair) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(repair, {visualizePathStyle: {stroke: '#00ffff'}});
+        }
       } else { // finally, go upgrade the controller
         creep.say('upgrading');
         creep.memory.upgrading = true;

@@ -38,7 +38,7 @@ function checkForConstruction(flag, room) {
   if (!flag || !flag.room) return;
   var noConstruction = flag.room.find(FIND_MY_CONSTRUCTION_SITES).length === 0;
   var needRepairs = flag.room.find(FIND_MY_STRUCTURES, {
-    filter: s => s.hpPercent() < 30
+    filter: s => s.hpPercent() < 40
   });
   if (noConstruction && needRepairs.length === 0) {
     delete flag.memory.construction;
@@ -124,6 +124,9 @@ function resizeHarvester(flag) {
     var newSize = Math.min(harvesterSize - 1, 3);
     flag.log('Decreasing harvester size to ' + newSize);
     flag.memory.harvesterSize = newSize;
+  } else if (idle < 1) {
+    flag.log('Harvester never idle, increasing');
+    flag.memory.harvesterSize = harvesterSize + 1;
   }
 }
 
