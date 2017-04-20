@@ -25,7 +25,7 @@ function spawn(room, body, memory, name) {
 }
 
 function checkForAttackers(flag, room) {
-  if (flag.room.find(FIND_HOSTILE_CREEPS).length === 0) {
+  if (flag.room && flag.room.find(FIND_HOSTILE_CREEPS).length === 0) {
     delete flag.memory.hostiles;
   } else {
     flag.room.log('Harvest flag: Saw hostile creep, asking for defenders');
@@ -34,6 +34,7 @@ function checkForAttackers(flag, room) {
 }
 
 function checkForConstruction(flag, room) {
+  if (!flag || !flag.room) return;
   var noConstruction = flag.room.find(FIND_MY_CONSTRUCTION_SITES).length === 0;
   var needRepairs = flag.room.find(FIND_MY_STRUCTURES, {
     filter: s => s.hpPercent() < 30
