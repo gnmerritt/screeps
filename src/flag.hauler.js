@@ -1,3 +1,5 @@
+var spawner = require('spawn.workers');
+
 var WORKS = 6;
 var CARRIES = 20;
 
@@ -22,11 +24,32 @@ function spawn(room, body, memory, name) {
   }
 }
 
+function checkForAttackers(flag, room) {
+  if (flag.room.find(FIND_HOSTILE_CREEPS).length === 0) {
+    delete flag.memory.hostiles;
+  } else {
+    flag.room.log('Harvest flag: Saw hostile creep, asking for defenders');
+    flag.memory.hostiles = true;
+  }
+}
+
 function checkCreeps(flag, room) {
   let creepName;
   var memory = {
     flag: flag.name, base: room.name
   };
+
+  var defenderCreep = flag.memory.defenderName;
+  var needDefender = !defenderCreep || !Game.creeps[defenderCreep];
+  if (flag.memory.hostiles && needDefender) {
+    creepName = "Defender_" + flag.name;
+    memory.role = 'defender';
+    memory.target = flag.room.name;
+    var body = spawner.getBody('defender', Math.min(1500, room.energyAvailable));
+    spawn(room, body, memory, creepName);
+    flag.memory.defenderName = creepName;
+    return;
+  }
 
   var harvesterCreep = flag.memory.harvesterName;
   var harvesterSize = flag.memory.harvesterSize || WORKS;
@@ -79,6 +102,7 @@ function resizeHarvester(flag) {
 }
 
 function run(flag, room) {
+  checkForAttackers(flag, room);
   checkCreeps(flag, room);
   resizeHarvester(flag);
   decayMaxHaul(flag);
