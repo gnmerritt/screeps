@@ -25,7 +25,8 @@ function spawn(room, body, memory, name) {
 }
 
 function checkForAttackers(flag, room) {
-  if (flag.room && flag.room.find(FIND_HOSTILE_CREEPS).length === 0) {
+  if (!flag || !flag.room) return;
+  if (flag.room.find(FIND_HOSTILE_CREEPS).length === 0) {
     delete flag.memory.hostiles;
   } else {
     flag.room.log('Harvest flag: Saw hostile creep, asking for defenders');
