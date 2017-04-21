@@ -19,9 +19,9 @@ function checkLife(creep) {
     creep.say('recharging');
     creep.memory.healing = true;
   }
-  else if (creep.memory.healing && creep.ticksToLive > 600) {
+  else if (creep.memory.healing && (!shouldHeal || creep.ticksToLive > 600)) {
     creep.say('healed');
-    creep.memory.healing = false;
+    delete creep.memory.healing;
   }
 
   if (creep.memory.healing) {
