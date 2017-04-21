@@ -37,7 +37,7 @@ function checkForAttackers(flag, room) {
 function checkForConstruction(flag, room) {
   if (!flag || !flag.room) return;
   var noConstruction = flag.room.find(FIND_MY_CONSTRUCTION_SITES).length === 0;
-  var needRepairs = flag.room.find(FIND_MY_STRUCTURES, {
+  var needRepairs = flag.room.find(FIND_STRUCTURES, {
     filter: s => s.hpPercent() < 40
   });
   if (noConstruction && needRepairs.length === 0) {
@@ -58,7 +58,7 @@ function checkCreeps(flag, room) {
   if (flag.memory.hostiles && needDefender) {
     creepName = "Defender_" + flag.name;
     memory.role = 'defender';
-    memory.target = flag.room.name;
+    memory.target = flag.pos.roomName;
     var body = spawner.getBody('defender', Math.min(1500, room.energyAvailable));
     spawn(room, body, memory, creepName);
     flag.memory.defenderName = creepName;
@@ -70,7 +70,7 @@ function checkCreeps(flag, room) {
   if (flag.memory.construction && needBuilder) {
     creepName = "Builder_" + flag.name;
     memory.role = 'harvester';
-    memory.target = flag.room.name;
+    memory.target = flag.pos.roomName;
     var body = spawner.getBody('harvester', Math.min(1000, room.energyAvailable));
     spawn(room, body, memory, creepName);
     flag.memory.builder = creepName;
