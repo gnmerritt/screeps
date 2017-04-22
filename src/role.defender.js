@@ -6,6 +6,7 @@ function runCreep(creep) {
     if (creep.attack(enemy) === ERR_NOT_IN_RANGE) {
       creep.moveTo(enemy.pos, {visualizePathStyle: {stroke: '#ff0000'}});
     }
+    creep.rangedAttack(enemy);
     return;
   }
 

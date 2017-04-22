@@ -26,6 +26,7 @@ var attacker = {
         if (creep.attack(target) === ERR_NOT_IN_RANGE) {
           creep.moveTo(target.pos, {visualizePathStyle: {stroke: '#ff0000'}});
         }
+        creep.rangedAttack(target);
       } else {
         delete Memory.warTarget;
       }
