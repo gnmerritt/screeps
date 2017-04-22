@@ -94,7 +94,12 @@ function checkCreeps(flag, room) {
     memory.role = 'hauler';
     // look at how much we hauled last lifetime, add one extra carry body part
     var numCarries = Math.ceil(maxHauled / CARRY_CAPACITY) + 1;
-    spawn(room, makeBody(CARRY, numCarries), memory, creepName);
+    for (
+      var body = makeBody(CARRY, numCarries);
+      spawner.getCost(body) > room.energyCapacityAvailable;
+      numCarries--
+    ) { /* no op */ }
+    spawn(room, body, memory, creepName);
     flag.memory.haulerName = creepName;
   }
 }
