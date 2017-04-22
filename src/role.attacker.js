@@ -4,12 +4,11 @@ var attacker = {
     run: function(creep) {
       if (Memory.warTarget) {
         creep.memory.target = Memory.warTarget;
-        if (creep.memory.target === creep.room.name) {
-          delete creep.memory.target;
-        } else {
-          common.goToRoom(creep, creep.memory.target);
-          return;
-        }
+      }
+      if (creep.memory.target === creep.room.name) {
+        delete creep.memory.target;
+      } else if (creep.memory.target) {
+        common.goToRoom(creep, creep.memory.target);
       }
 
       var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
