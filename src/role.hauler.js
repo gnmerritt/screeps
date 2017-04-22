@@ -28,7 +28,7 @@ function runCreep(creep) {
         filter: res => res.amount > 100
       });
       resources.sort((a, b) => a.amount < b.amount);
-      if (resources) {
+      if (resources && resources.length > 0) {
         var resource = resources[0];
         if (creep.pickup(resource) === ERR_NOT_IN_RANGE) {
           creep.moveTo(resource);
