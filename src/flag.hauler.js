@@ -109,7 +109,7 @@ function decayMaxHaul(flag) {
   flag.memory.maxHauled = maxHauled;
 }
 
-function resizeHarvester(flag) {
+function resizeHarvester(flag, room) {
   if (Game.time % 200 !== 0) return;
 
   var harvesterCreep = flag.memory.harvesterName;
@@ -125,8 +125,13 @@ function resizeHarvester(flag) {
     flag.log('Decreasing harvester size to ' + newSize);
     flag.memory.harvesterSize = newSize;
   } else if (idle < 1) {
-    flag.log('Harvester never idle, increasing');
-    flag.memory.harvesterSize = harvesterSize + 1;
+    var newSize = harvesterSize + 1;
+    var newBody = makeBody(WORK, newSize);
+    var cost = spawner.getCost(newBody);
+    if (room && cost <= room.energyCapacityAvailable) {
+      flag.log('Harvester never idle, increasing');
+      flag.memory.harvesterSize = newSize;
+    }
   }
 }
 
@@ -134,7 +139,7 @@ function run(flag, room) {
   checkForAttackers(flag, room);
   checkForConstruction(flag, room);
   checkCreeps(flag, room);
-  resizeHarvester(flag);
+  resizeHarvester(flag, room);
   decayMaxHaul(flag);
 }
 
