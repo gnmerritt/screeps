@@ -24,10 +24,12 @@ function runCreep(creep) {
     if (creep.room.name != flag.pos.roomName) {
       common.goToRoom(creep, flag.pos.roomName);
     } else {
-      var resource = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES, {
+      var resources = creep.room.find(FIND_DROPPED_RESOURCES, {
         filter: res => res.amount > 100
       });
-      if (resource) {
+      resources.sort((a, b) => a.amount < b.amount);
+      if (resources) {
+        var resource = resources[0];
         if (creep.pickup(resource) === ERR_NOT_IN_RANGE) {
           creep.moveTo(resource);
         }
