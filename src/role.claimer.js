@@ -37,6 +37,7 @@ var roleClaimer = {
     if (Game.gcl.level == 1 || thisRoom.controller.level < 5) {
       return false;
     }
+    if (!Memory.nextClaim) return false;
     var myControllers = 0;
     for (var name in Game.rooms) {
       var room = Game.rooms[name];
