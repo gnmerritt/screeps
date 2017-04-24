@@ -86,6 +86,16 @@ var roleHarvester = {
 
       var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
       if (!source) {
+        var storage = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
+          filter: structure => structure.structureType === STRUCTURE_STORAGE
+            && structure.store[RESOURCE_ENERGY] > STORAGE_MIN
+        });
+        if (storage) {
+          creep.say('storage');
+          creep.memory.storage = true;
+          return;
+        }
+
         if (creep.carry.energy > 0) {
           // do something with the energy we have so far
           delete creep.memory.harvesting;
