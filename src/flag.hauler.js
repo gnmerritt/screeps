@@ -101,7 +101,31 @@ function checkCreeps(flag, room) {
     }
     spawn(room, body, memory, creepName);
     flag.memory.haulerName = creepName;
+    return;
   }
+
+  var claimerCreep = flag.memory.claimerName;
+  var needClaimer = !Game.creeps[claimerCreep]
+    && flag.room
+    && flag.room.controller
+    && flag.room.find(FIND_SOURCES).length > 1;
+  if (needClaimer) {
+    creepName = "Claimer_" + flag.name;
+    memory.role = 'claimer';
+    memory.target = flag.pos.roomName;
+    memory.alwaysReserve = true;
+    var body = getClaimerBody(flag.room);
+    spawn(room, body, memory, creepName);
+    flag.memory.claimerName = creepName;
+  }
+}
+
+function getClaimerBody(room) {
+  var res = room && room.controller && room.controller.reservation;
+  if (res && res.ticksToEnd > 4000) {
+    return [CLAIM, MOVE];
+  }
+  return [CLAIM, CLAIM, MOVE, MOVE];
 }
 
 function decayMaxHaul(flag) {

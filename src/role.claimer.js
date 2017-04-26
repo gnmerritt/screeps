@@ -5,7 +5,7 @@ var roleClaimer = {
    * @param {Creep} creep
    */
   run: function(creep) {
-    var target = Memory.nextClaim;
+    var target = creep.memory.target || Memory.nextClaim;
     var room = creep.room.name;
 
     if (target && room != target) {
@@ -16,7 +16,9 @@ var roleClaimer = {
       // we made it! go claim the new controller
       var controller = creep.room.controller;
       if (controller) {
-        var success = creep.claimController(controller);
+        var success = creep.memory.alwaysReserve
+          ? ERR_GCL_NOT_ENOUGH
+          : creep.claimController(controller);
         if (success === ERR_GCL_NOT_ENOUGH) {
           creep.say('reserving');
           success = creep.reserveController(controller);
