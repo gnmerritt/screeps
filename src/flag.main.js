@@ -34,7 +34,7 @@ function runFlag(flagName, room) {
 }
 
 function run() {
-  if (Game.time % 20 !== 0) {
+  if (Game.time % 10 !== 0) {
     return;
   }
 
