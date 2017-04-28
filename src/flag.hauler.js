@@ -107,8 +107,7 @@ function checkCreeps(flag, room) {
   var claimerCreep = flag.memory.claimerName;
   var needClaimer = !Game.creeps[claimerCreep]
     && flag.room
-    && flag.room.controller
-    && flag.room.find(FIND_SOURCES).length > 1;
+    && flag.room.controller;
   if (needClaimer) {
     creepName = "Claimer_" + flag.name;
     memory.role = 'claimer';
