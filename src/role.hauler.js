@@ -42,7 +42,12 @@ function runCreep(creep) {
       common.goToRoom(creep, creep.memory.base);
     } else {
       var dropoff = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-        filter: structure => structure.structureType === STRUCTURE_STORAGE
+        filter: structure => {
+          var type = structure.structureType;
+          var extension = type === STRUCTURE_EXTENSION
+            && structure.energy < structure.energyCapacity;
+          return type === STRUCTURE_STORAGE || extension;
+        }
       });
       if (dropoff) {
         if (creep.transfer(dropoff, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
