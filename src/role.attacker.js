@@ -26,7 +26,7 @@ var attacker = {
           creep.moveTo(target.pos, {visualizePathStyle: {stroke: '#ff0000'}});
         }
         creep.rangedAttack(target);
-      } else {
+      } else if (creep.memory.target == creep.room.name){
         delete Memory.warTarget;
       }
     }
