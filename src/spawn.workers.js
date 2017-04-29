@@ -21,7 +21,7 @@ var WORK_ADDS = [
 ];
 
 var DEFENSE_ADDS = [
-  [TOUGH, RANGED_ATTACK, MOVE, MOVE],
+  [TOUGH, ATTACK, RANGED_ATTACK, MOVE, MOVE, MOVE],
   [TOUGH, ATTACK, MOVE, MOVE],
   [ATTACK, MOVE],
   [TOUGH, MOVE],
@@ -31,7 +31,7 @@ var DEFENSE_ADDS = [
 function getBody(role, energy) {
   let adds, base, movesPerBody;
   if (role === 'attacker' || role === 'defender') {
-    base = [TOUGH, TOUGH, MOVE, ATTACK, ATTACK, MOVE];
+    base = [ATTACK, MOVE];
     adds = DEFENSE_ADDS;
     movesPerBody = 1;
   } else {
