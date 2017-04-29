@@ -99,6 +99,8 @@ function run() {
   optimizeWorkers.initMemory();
   optimizeWorkers.checkEnergy();
 
+  var spawnedMiner = false;
+
   for (var name in Game.spawns) {
     var spawn = Game.spawns[name];
     var room = spawn.room;
@@ -130,7 +132,8 @@ function run() {
       spawnCreep(spawn, 'attacker', Math.min(2000, room.energyAvailable));
     } else if (!tooManyCreeps && !usingFatCreeps && (maxEnergy || noCreeps)) {
       spawnCreep(spawn, 'harvester', room.energyAvailable);
-    } else if (extractors.length > 0 && countRoles(room, 'miner') === 0) {
+    } else if (!spawnedMiner && tooManyCreeps && extractors.length > 0 && countRoles(room, 'miner') === 0) {
+      spawnedMiner = true;
       var minerals = spawn.pos.findClosestByRange(FIND_MINERALS, {
         filter: m => m.mineralAmount > 0
       });
