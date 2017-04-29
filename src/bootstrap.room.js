@@ -57,6 +57,8 @@ function maybeSendWorker(room) {
     var toSend = workers[0];
     room.log('Sending creep ' + toSend.name + ' from ' + room.name + ' to ' + name);
     toSend.memory.target = name;
+    toSend.memory.storage = false;
+    toSend.memory.upgrading = false;
   }
 }
 
