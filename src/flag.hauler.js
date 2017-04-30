@@ -97,7 +97,7 @@ function checkCreeps(flag, room) {
     var body = makeBody(CARRY, numCarries);
     if (spawner.getCost(body) > room.energyCapacityAvailable) {
       flag.log('hauler too expensive, decaying maxHauled');
-      flag.memory.maxHauled = maxHauled - 100;
+      flag.memory.maxHauled = Math.max(0, maxHauled - 100);
     }
     spawn(room, body, memory, creepName);
     flag.memory.haulerName = creepName;
