@@ -114,14 +114,14 @@ function checkCreeps(flag, room) {
     memory.role = 'claimer';
     memory.target = flag.pos.roomName;
     memory.alwaysReserve = true;
-    var body = getClaimerBody(flag.room);
+    var body = getClaimerBody(room, flag.room);
     spawn(room, body, memory, creepName);
     flag.memory.claimerName = creepName;
   }
 }
 
-function getClaimerBody(room) {
-  var res = room && room.controller && room.controller.reservation;
+function getClaimerBody(room, flagRoom) {
+  var res = flagRoom && flagRoom.controller && flagRoom.controller.reservation;
   var body = [CLAIM, CLAIM, MOVE, MOVE];
   if ((res && res.ticksToEnd > 4000) || spawner.getCost(body) > room.energyCapacityAvailable) {
     body = [CLAIM, MOVE];
