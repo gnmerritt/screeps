@@ -53,6 +53,9 @@ function runCreep(creep) {
         if (creep.transfer(dropoff, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
           creep.moveTo(dropoff);
         }
+      } else {
+        creep.say('dropping');
+        creep.drop(RESOURCE_ENERGY);
       }
     }
   }
