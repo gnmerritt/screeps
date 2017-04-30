@@ -71,6 +71,7 @@ function checkCreeps(flag, room) {
     creepName = "Builder_" + flag.name;
     memory.role = 'harvester';
     memory.target = flag.pos.roomName;
+    memory.preferDrops = true;
     var body = spawner.getBody('harvester', Math.min(1000, room.energyAvailable));
     spawn(room, body, memory, creepName);
     flag.memory.builder = creepName;
@@ -121,10 +122,11 @@ function checkCreeps(flag, room) {
 
 function getClaimerBody(room) {
   var res = room && room.controller && room.controller.reservation;
-  if (res && res.ticksToEnd > 4000) {
-    return [CLAIM, MOVE];
+  var body = [CLAIM, CLAIM, MOVE, MOVE];
+  if ((res && res.ticksToEnd > 4000) || spawner.getCost(body) > room.energyCapacityAvailable) {
+    body = [CLAIM, MOVE];
   }
-  return [CLAIM, CLAIM, MOVE, MOVE];
+  return body;
 }
 
 function decayMaxHaul(flag) {

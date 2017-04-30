@@ -84,13 +84,12 @@ var roleHarvester = {
         return;
       }
 
-      var dropped = creep.room.find(FIND_DROPPED_RESOURCES, {
+      var dropped = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES, {
         filter: res => res.amount > 100
       });
-      if (dropped.length > 0) {
-        var resource = dropped[0];
-        if (creep.pickup(resource) === ERR_NOT_IN_RANGE) {
-          creep.moveTo(resource);
+      if (dropped && creep.memory.preferDrops) {
+        if (creep.pickup(dropped) === ERR_NOT_IN_RANGE) {
+          creep.moveTo(dropped);
         }
         return;
       }
@@ -104,6 +103,12 @@ var roleHarvester = {
         if (storage) {
           creep.say('storage');
           creep.memory.storage = true;
+          return;
+        }
+        if (dropped) {
+          if (creep.pickup(dropped) === ERR_NOT_IN_RANGE) {
+            creep.moveTo(dropped);
+          }
           return;
         }
 

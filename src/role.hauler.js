@@ -44,7 +44,7 @@ function runCreep(creep) {
       var dropoff = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
         filter: structure => {
           var type = structure.structureType;
-          var extension = type === STRUCTURE_EXTENSION
+          var extension = (type === STRUCTURE_EXTENSION || type === STRUCTURE_SPAWN)
             && structure.energy < structure.energyCapacity;
           return type === STRUCTURE_STORAGE || extension;
         }
