@@ -19,8 +19,11 @@ function checkLife(creep) {
     creep.memory.healing = true;
   }
   else if (creep.memory.healing && (!shouldHeal || creep.ticksToLive > 600)) {
-    creep.say('healed');
-    delete creep.memory.healing;
+    // heal until somebody else is waiting to heal or we're super healthy
+    if (numHealingCreeps(room) > 1 || creep.ticksToLive > 1400 || room.energyAvailable <= 100) {
+      creep.say('healed');
+      delete creep.memory.healing;
+    }
   }
 
   if (creep.memory.healing) {
@@ -34,6 +37,12 @@ function checkLife(creep) {
   }
 
   return creep.memory.healing;
+}
+
+function numHealingCreeps(room) {
+  return room.find(FIND_MY_CREEPS, {
+    filter: c => c.memory.healing
+  }).length;
 }
 
 module.exports = {
