@@ -84,6 +84,17 @@ var roleHarvester = {
         return;
       }
 
+      var dropped = creep.room.find(FIND_DROPPED_RESOURCES, {
+        filter: res => res.amount > 100
+      });
+      if (dropped.length > 0) {
+        var resource = dropped[0];
+        if (creep.pickup(resource) === ERR_NOT_IN_RANGE) {
+          creep.moveTo(resource);
+        }
+        return;
+      }
+
       var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
       if (!source) {
         var storage = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
