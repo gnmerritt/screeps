@@ -24,12 +24,19 @@ function runCreep(creep) {
     if (creep.room.name != flag.pos.roomName) {
       common.goToRoom(creep, flag.pos.roomName);
     } else {
-      var resources = creep.room.find(FIND_DROPPED_RESOURCES, {
-        filter: res => res.amount > 100
+      var resource = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES, {
+        filter: res => res.amount >= creep.carryCapacity
       });
-      resources.sort((a, b) => a.amount < b.amount);
-      if (resources && resources.length > 0) {
-        var resource = resources[0];
+      if (!resource) {
+        var resources = creep.room.find(FIND_DROPPED_RESOURCES, {
+          filter: res => res.amount > 100
+        });
+        resources.sort((a, b) => a.amount < b.amount);
+        if (resources && resources.length > 0) {
+          resource = resources[0];
+        }
+      }
+      if (resource) {
         if (creep.pickup(resource) === ERR_NOT_IN_RANGE) {
           creep.moveTo(resource);
         }
