@@ -2,6 +2,19 @@ var common = require('role.common');
 
 var STORAGE_MIN = 250000; // don't take energy from storage below this level
 var STORAGE_MAX = 350000; // prefer storage above this level
+var STORAGE_ALWAYS = 500000;
+
+function shouldUseStorage(storage) {
+  var energy = storage.store[RESOURCE_ENERGY];
+  if (energy > STORAGE_ALWAYS) {
+    return true;
+  } else if (energy > STORAGE_MAX && Game.time % 2 == 0) {
+    return true;
+  } else if (energy > STORAGE_MIN && Game.time % 4 == 0) {
+    return true;
+  }
+  return false;
+}
 
 var roleHarvester = {
 
@@ -41,8 +54,8 @@ var roleHarvester = {
         filter: structure => structure.structureType === STRUCTURE_STORAGE
           && structure.store[RESOURCE_ENERGY] > STORAGE_MIN
       });
-      var storageTweak = Game.time % 3 === 0;
-      if (storage && storage.store[RESOURCE_ENERGY] > STORAGE_MAX && storageTweak) {
+      var storageTweak = storage && shouldUseStorage(storage);
+      if (storageTweak) {
         creep.say('storage');
         creep.memory.storage = true;
       } else {

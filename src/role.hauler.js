@@ -53,7 +53,8 @@ function runCreep(creep) {
           var type = structure.structureType;
           var extension = (type === STRUCTURE_EXTENSION || type === STRUCTURE_SPAWN)
             && structure.energy < structure.energyCapacity;
-          return type === STRUCTURE_STORAGE || extension;
+          var storage = type === STRUCTURE_STORAGE && _.sum(structure.store) < STORAGE_CAPACITY * 0.95;
+          return storage || extension;
         }
       });
       if (dropoff) {
