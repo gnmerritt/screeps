@@ -114,7 +114,9 @@ function run() {
 
     var wartime = Memory.warTarget && tooManyCreeps;
 
-    var spawnExpander = !noCreeps && countRoles(room, 'claimer') === 0 && claimer.shouldExpand(room);
+    var spawnExpander = !noCreeps && countRoles(room, 'claimer') === 0
+      && claimer.shouldExpand(room)
+      && !Memory.noExpand;
     var extractors = room.find(FIND_MY_STRUCTURES, {
       filter: s => s.structureType === STRUCTURE_EXTRACTOR
     });
